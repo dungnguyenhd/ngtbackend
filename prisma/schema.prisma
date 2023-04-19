@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:Zxczxc123@localhost:3306/ngtdatabase"
+}
+
+model User {
+  id                   Int           @id @default(autoincrement())
+  user_name            String        @unique
+  password             String?
+  full_name            String?
+  avatar               String?
+  type                 LoginType
+  email                String?       @unique
+  user_id_social       String?
+  status               Status
+  level                UserLevel
+  created_at           DateTime      @default(now())
+  updated_at           DateTime      @updatedAt
+  last_login           DateTime?
+  last_logout          DateTime?
+  current_used_product Int?
+  has_password         Boolean       @default(true)
+
+  @@map("user")
+}
+
+enum LoginType {
+  KAKAO
+  GOOGLE
+  ACCOUNT
+}
+
+enum Status {
+  ACTIVE
+  DISABLE
+  UNCONFIRM
+  DELETED
+}
+
+enum UserLevel {
+  USER
+  MANAGER
+  ADMIN
+}
