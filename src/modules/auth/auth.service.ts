@@ -49,7 +49,7 @@ export class AuthService {
       full_name: params.fullName,
       status: 'UNCONFIRM',
       level: 'USER',
-      type: params.type,
+      type: 'ACCOUNT',
       has_password: true,
     };
 
@@ -172,12 +172,12 @@ export class AuthService {
                   </div>
                 </div>
                 <div style="text-align: center;margin-top: 40px;">
-                  <<a href="https://ngtbackend-production.up.railway.app/auth/confirm-email?jwt=${jwt}"
+                  <a href="https://ngtbackend-production.up.railway.app/auth/confirm-email?jwt=${jwt}"
                     style="display: inline-block;cursor: pointer;text-decoration: unset;padding: 12px 24px;background: #4834f1;border-radius: 100px;">
                     <span style="font-weight: 500;font-size: 16px;line-height: 24px;letter-spacing: 0.02em;color: #F3F4F6;">
                       ${mailText04}
                     </span>
-                  </a>>
+                  </a>
                 </div>
               </div>
             </div>
@@ -189,8 +189,8 @@ export class AuthService {
     };
 
     const sesConfig = {
-      accessKeyId: `AKIAWU4L6P4UOA7K7DWL`,
-      secretAccessKey: `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`,
+      accessKeyId: process.env.SES_ACCESS_KEY,
+      secretAccessKey: process.env.SES_SECRET_KEY,
       region: `ap-southeast-2`,
     };
     const sesAws = new AWS.SES(sesConfig);
