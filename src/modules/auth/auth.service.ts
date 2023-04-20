@@ -80,6 +80,7 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: { user_name: params.body.user_name },
     });
+    
     throwIf(!user, new UnauthorizedException(EMAIL_NOT_FOUND));
     throwIf(user.password == null, new UnauthorizedException(WRONG_PASSWORD));
     throwIf(
