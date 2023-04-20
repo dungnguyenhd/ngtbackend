@@ -65,21 +65,6 @@ export class UserProfileResponseDto {
 
   user_id_social: string | null;
 
-  @IsString()
-  token: string | null;
-
-  @IsString()
-  refresh_token: string | null;
-
-  @IsNumber()
-  summoner_id: number | null;
-
-  @IsString()
-  summoner_name: string | null;
-
-  @IsString()
-  summoner_region: string | null;
-
   status: string;
 
   level: string;

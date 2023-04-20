@@ -11,8 +11,11 @@ import {
 import {
   OnSuccessResponseDto,
   LoginResponseDto,
+  UserProfileResponseDto,
 } from './dto/auth.response.dto';
 import { SignupDto, LoginDto } from './dto/login.dto';
+import { Auth } from '../common/decorators/auth.decorator';
+import { User } from '../common/decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -41,5 +44,11 @@ export class AuthController {
     return {
       url: returnUrl,
     };
+  }
+
+  @Auth()
+  @Get('profile')
+  getProfile(@User() user): Promise<UserProfileResponseDto> {
+    return user;
   }
 }
