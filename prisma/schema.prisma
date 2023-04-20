@@ -1,13 +1,13 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:SSN9tJYqmIWBHxpXRbh7@containers-us-west-65.railway.app:6394/railway"
+  url      = "mysql://root:SSN9tJYqmIWBHxpXRbh7@containers-us-west-65.railway.app:6394/ngtdb"
+}
+
+generator client {
+  provider = "prisma-client-js"
 }
 
 model User {
