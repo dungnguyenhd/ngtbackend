@@ -10,7 +10,7 @@ export class LoginDto {
 
   @IsNotEmpty()
   type: string;
-}
+}    
 
 export class SignupDto {
   @IsNotEmpty()
