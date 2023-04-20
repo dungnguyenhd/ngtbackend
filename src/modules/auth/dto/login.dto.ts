@@ -1,11 +1,4 @@
-import { LoginType, Status, UserLevel } from '@prisma/client';
-import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsEmail,
-  IsEnum,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEmail } from 'class-validator';
 
 export class LoginDto {
   @IsString()
@@ -16,7 +9,7 @@ export class LoginDto {
   password: string;
 
   @IsNotEmpty()
-  type: LoginType;
+  type: string;
 }
 
 export class SignupDto {
@@ -36,16 +29,13 @@ export class SignupDto {
   email?: string;
 
   @IsNotEmpty()
-  @IsEnum(LoginType)
-  type: LoginType;
+  type: string;
 
   @IsNotEmpty()
-  @IsEnum(Status)
-  status: Status;
+  status: string;
 
   @IsNotEmpty()
-  @IsEnum(UserLevel)
-  level: UserLevel;
+  level: string;
 
   @IsOptional()
   token?: string;

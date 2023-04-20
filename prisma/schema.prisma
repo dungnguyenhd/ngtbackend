@@ -16,11 +16,11 @@ model User {
   password             String?
   full_name            String?
   avatar               String?
-  type                 LoginType
+  type                 String?
   email                String?       @unique
   user_id_social       String?
-  status               Status
-  level                UserLevel
+  status               String?
+  level                String?
   created_at           DateTime      @default(now())
   updated_at           DateTime      @updatedAt
   last_login           DateTime?
@@ -29,23 +29,4 @@ model User {
   has_password         Boolean       @default(true)
 
   @@map("user")
-}
-
-enum LoginType {
-  KAKAO
-  GOOGLE
-  ACCOUNT
-}
-
-enum Status {
-  ACTIVE
-  DISABLE
-  UNCONFIRM
-  DELETED
-}
-
-enum UserLevel {
-  USER
-  MANAGER
-  ADMIN
 }

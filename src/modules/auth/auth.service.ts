@@ -10,7 +10,6 @@ import { PrismaService } from '../common/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt.payload';
 import { throwIf } from '../common/helpers/index.helper';
-import { Status, UserLevel } from '@prisma/client';
 import {
   EMAIL_NOT_FOUND,
   WRONG_PASSWORD,
@@ -39,7 +38,7 @@ export class AuthService {
       where: { user_name: params.userName },
     });
     throwIf(
-      existingUser && existingUser.status === Status.ACTIVE,
+      existingUser && existingUser.status === 'ACTIVE',
       new UnauthorizedException(DUPLICATE_EMAIL),
     );
 
@@ -48,8 +47,8 @@ export class AuthService {
       password: hashedPassword,
       email: params.userName,
       full_name: params.fullName,
-      status: Status.UNCONFIRM,
-      level: UserLevel.USER,
+      status: 'UNCONFIRM',
+      level: 'USER',
       type: params.type,
       has_password: true,
     };
@@ -84,13 +83,10 @@ export class AuthService {
     throwIf(!user, new UnauthorizedException(EMAIL_NOT_FOUND));
     throwIf(user.password == null, new UnauthorizedException(WRONG_PASSWORD));
     throwIf(
-      user.status == Status.UNCONFIRM,
+      user.status == 'UNCONFIRM',
       new UnauthorizedException(USER_NOT_VERIFIED),
     );
-    throwIf(
-      user.status !== Status.ACTIVE,
-      new UnauthorizedException(USER_BLOCKED),
-    );
+    throwIf(user.status !== 'ACTIVE', new UnauthorizedException(USER_BLOCKED));
 
     const passwordMatching = await bcryptjs.compare(
       params.body.password,
@@ -229,7 +225,7 @@ export class AuthService {
       await this.prismaService.user.update({
         where: { id: user.id },
         data: {
-          status: Status.ACTIVE,
+          status: 'ACTIVE',
         },
       });
       return true;

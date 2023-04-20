@@ -1,4 +1,3 @@
-import { LoginType, Status, UserLevel } from '@prisma/client';
 import { DateTime } from 'aws-sdk/clients/devicefarm';
 import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
@@ -32,11 +31,11 @@ export class SignupResponseDto {
 
   @IsNotEmpty()
   @IsString()
-  type: LoginType;
+  type: string;
 
   @IsNotEmpty()
   @IsString()
-  status: Status;
+  status: string;
 
   @IsNotEmpty()
   @IsEmail()
@@ -59,7 +58,7 @@ export class UserProfileResponseDto {
   @IsString()
   avatar: string | null;
 
-  type: LoginType;
+  type: string;
 
   @IsString()
   email: string | null;
@@ -81,9 +80,9 @@ export class UserProfileResponseDto {
   @IsString()
   summoner_region: string | null;
 
-  status: Status;
+  status: string;
 
-  level: UserLevel;
+  level: string;
 
   created_at: Date;
 
