@@ -11,7 +11,6 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt.payload';
 import { throwIf } from '../common/helpers/index.helper';
 import { Status, UserLevel } from '@prisma/client';
-import ms from 'ms';
 import {
   EMAIL_NOT_FOUND,
   WRONG_PASSWORD,
