@@ -41,8 +41,8 @@ export class AuthController {
     console.log('test');
     const result = await this.authService.confirmEmail(jwt);
     const returnUrl = result
-      ? `https://643fc54f2a457a12e57afca4--ngtstudio.netlify.app/signin?confirm=true`
-      : `https://643fc54f2a457a12e57afca4--ngtstudio.netlify.app/signin?confirm=false`;
+      ? `https://6442539828ed063b4a5d4a51--ngtstudio.netlify.app/signin?confirm=true`
+      : `https://6442539828ed063b4a5d4a51--ngtstudio.netlify.app/signin?confirm=false`;
     return {
       url: returnUrl,
     };
@@ -68,10 +68,10 @@ export class AuthController {
 
     if (typeof token === 'string') {
       // handle error case
-      return `https://6442432058d3e228719007db--ngtstudio.netlify.app/?token=null`;
+      return `https://6442539828ed063b4a5d4a51--ngtstudio.netlify.app/?token=null`;
     } else {
       // success case
-      return `https://6442432058d3e228719007db--ngtstudio.netlify.app/?token=${token.accessToken}`;
+      return `https://6442539828ed063b4a5d4a51--ngtstudio.netlify.app/?token=${token.accessToken}`;
     }
   }
 }
