@@ -7,6 +7,7 @@ import {
   Query,
   Redirect,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   OnSuccessResponseDto,
@@ -16,6 +17,7 @@ import {
 import { SignupDto, LoginDto } from './dto/login.dto';
 import { Auth } from '../common/decorators/auth.decorator';
 import { User } from '../common/decorators/user.decorator';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -39,8 +41,8 @@ export class AuthController {
     console.log('test');
     const result = await this.authService.confirmEmail(jwt);
     const returnUrl = result
-      ? `https://643fc54f2a457a12e57afca4--ngtstudio.netlify.app/login?confirm=true`
-      : `https://643fc54f2a457a12e57afca4--ngtstudio.netlify.app/login?confirm=false`;
+      ? `https://643fc54f2a457a12e57afca4--ngtstudio.netlify.app/signin?confirm=true`
+      : `https://643fc54f2a457a12e57afca4--ngtstudio.netlify.app/signin?confirm=false`;
     return {
       url: returnUrl,
     };
@@ -50,5 +52,25 @@ export class AuthController {
   @Get('profile')
   getProfile(@User() user): Promise<UserProfileResponseDto> {
     return user;
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) {
+    //do nothing
+  }
+
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  @Redirect()
+  async googleAuthRedirect(@Req() req) {
+    const token = await this.authService.googleLogin(req);
+    if (typeof token === 'string') {
+      // handle error case
+      return `https://6442432058d3e228719007db--ngtstudio.netlify.app/?token=null`;
+    } else {
+      // success case
+      return `https://6442432058d3e228719007db--ngtstudio.netlify.app/?token=${token.accessToken}`;
+    }
   }
 }

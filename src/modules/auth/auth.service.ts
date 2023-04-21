@@ -80,7 +80,7 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: { user_name: params.body.user_name },
     });
-    
+
     throwIf(!user, new UnauthorizedException(EMAIL_NOT_FOUND));
     throwIf(user.password == null, new UnauthorizedException(WRONG_PASSWORD));
     throwIf(
@@ -232,6 +232,60 @@ export class AuthService {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  async googleLogin(req) {
+    if (!req.user) {
+      return 'No user from google';
+    }
+
+    try {
+      const check = this.prismaService.user.findUnique({
+        where: { user_name: req.user.email },
+      });
+
+      if (check) {
+        throwIf(!check, new UnauthorizedException(EMAIL_NOT_FOUND));
+        throwIf(
+          (await check).status == 'UNCONFIRM',
+          new UnauthorizedException(USER_NOT_VERIFIED),
+        );
+        throwIf(
+          (await check).status !== 'ACTIVE',
+          new UnauthorizedException(USER_BLOCKED),
+        );
+        const token = this.generateToken(
+          (await check).id,
+          (await check).user_name,
+          null,
+        );
+        return token;
+      } else {
+        const userData = {
+          user_name: req.user.email,
+          password: null,
+          email: req.user.email,
+          full_name: null,
+          status: 'ACTIVE',
+          level: 'USER',
+          type: 'GOOGLE',
+          has_password: true,
+        };
+
+        const newUser = this.prismaService.user.create({
+          data: userData,
+        });
+
+        const token = this.generateToken(
+          (await newUser).id,
+          (await newUser).user_name,
+          null,
+        );
+        return token;
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 }
