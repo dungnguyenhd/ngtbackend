@@ -145,7 +145,7 @@ export class AuthService {
               style="width: 100%;max-width: 595px;min-width: 327px;border: solid #582afa 2px;border-radius: 24px;overflow: hidden;">
               <div
                 style="height:180px;background-color:#febd00;background-position: center;background-repeat: no-repeat;background-size: cover;background-image: url('https://media.istockphoto.com/id/1341408852/video/colored-smoke-on-a-dark-background-blue-and-red-light-with-smoke.jpg?s=640x640&k=20&c=v2DQUY8IVbli_6FH_9KAs6YWRXlDdYiBJHfp7JFh7NY=')">
-                <a href="https://64426faa092a1957440d3dd9--ngtstudio.netlify.app/"
+                <a href="https://644283d5bbf96b6923e6a3a8--ngtstudio.netlify.app/"
                   style="position:absolute;bottom: 18px;;left:50%;transform:translateX(-50%);text-decoration: unset;">
                   <img src="https://i.postimg.cc/5tnmTsLj/New-Project-1.png" style="margin-top: 44px" alt="logo">
                   <div
