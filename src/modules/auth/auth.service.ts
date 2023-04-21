@@ -1,11 +1,9 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
   RequestTimeoutException,
   UnauthorizedException,
 } from '@nestjs/common';
-import * as AWS from 'aws-sdk';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt.payload';
@@ -20,7 +18,6 @@ import {
   WRONG_USER_NAME,
 } from '../common/constants/error.constant';
 import * as bcryptjs from 'bcryptjs';
-import { SendEmailRequest } from 'aws-sdk/clients/ses';
 import { OnSuccessResponseDto } from './dto/auth.response.dto';
 import { SignupDto } from './dto/login.dto';
 
@@ -29,7 +26,7 @@ export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   // Normal Signup
   async signup(params: SignupDto): Promise<OnSuccessResponseDto> {
@@ -55,9 +52,9 @@ export class AuthService {
 
     const user = existingUser
       ? await this.prismaService.user.update({
-          where: { user_name: params.userName },
-          data: userData,
-        })
+        where: { user_name: params.userName },
+        data: userData,
+      })
       : await this.prismaService.user.create({ data: userData });
 
     const { accessToken } = this.generateToken(user.id, user.user_name, null);
@@ -126,82 +123,91 @@ export class AuthService {
       'If you did not make this request, please disregard this email.';
     const mailText04 = 'CONFIRM';
 
-    console.log('ok');
+    const content = `<div class="container" align="center">
+    <div
+      style="width: 100%;max-width: 595px;min-width: 327px;border: solid #582afa 2px;border-radius: 24px;overflow: hidden;">
+      <div
+        style="height:180px;background-color:#febd00;background-position: center;background-repeat: no-repeat;background-size: cover;background-image: url('https://media.istockphoto.com/id/1341408852/video/colored-smoke-on-a-dark-background-blue-and-red-light-with-smoke.jpg?s=640x640&k=20&c=v2DQUY8IVbli_6FH_9KAs6YWRXlDdYiBJHfp7JFh7NY=')">
+        <a href="https://644283d5bbf96b6923e6a3a8--ngtstudio.netlify.app/"
+          style="position:absolute;bottom: 18px;;left:50%;transform:translateX(-50%);text-decoration: unset;">
+          <img src="https://i.postimg.cc/5tnmTsLj/New-Project-1.png" style="margin-top: 44px" alt="logo">
+          <div
+            style="font-weight: 700;font-size: 24px;line-height: 32px;letter-spacing: 0.16em;color: #FFFFFF;margin-top: 24px;">
+            NGT STUDIO</div>
+        </a>
+      </div>
+      <div align="left" class="content" style="background-color: #fefefe;font-family: 'SVN-Cera';padding: 32px 16px 48px;">
+        <div>
+          <div style=" font-style: normal;font-size: 18px;line-height: 26px;color: #4b5563;">
+            ${hiText}
+          </div><br>
+          <div class="fw-medium" style="font-style: normal;font-weight: 500;font-size: 18px;line-height: 26px;">
+            <span style="color: #0f213d">
+              ${mailText01}</span>
+          </div>
+        </div>
+        <br>
+        <div class="fs-lg" style="color: #4B5563;font-size: 16px;line-height: 24px;">
+          <div>
+            ${mailText02}
+          </div><br>
+          <div>
+            ${mailText03}
+          </div>
+        </div>
+        <div style="text-align: center;margin-top: 40px;">
+          <a href="https://ngtbackend-production.up.railway.app/auth/confirm-email?jwt=${jwt}"
+            style="display: inline-block;cursor: pointer;text-decoration: unset;padding: 12px 24px;background: #4834f1;border-radius: 100px;">
+            <span style="font-weight: 500;font-size: 16px;line-height: 24px;letter-spacing: 0.02em;color: #F3F4F6;">
+              ${mailText04}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>`
 
-    const params: SendEmailRequest = {
-      Destination: {
-        ToAddresses: [email], // email người nhận
+    const axios = require('axios');
+    let data = JSON.stringify({
+      "personalizations": [
+        {
+          "to": [
+            {
+              "email": email
+            }
+          ],
+          "subject": "[NGT Studio] CONFIRM ACCOUNT EMAIL"
+        }
+      ],
+      "from": {
+        "email": "ngtstudio@dev.gg"
       },
-      Source: `dungnguyent9902@gmail.com`, // email dùng để gửi đi
-      Message: {
-        Subject: {
-          Data: `NGT Studio Email Verification`,
-          Charset: 'UTF-8',
-        },
-        Body: {
-          Html: {
-            Data: `<div class="container" align="center">
-            <div
-              style="width: 100%;max-width: 595px;min-width: 327px;border: solid #582afa 2px;border-radius: 24px;overflow: hidden;">
-              <div
-                style="height:180px;background-color:#febd00;background-position: center;background-repeat: no-repeat;background-size: cover;background-image: url('https://media.istockphoto.com/id/1341408852/video/colored-smoke-on-a-dark-background-blue-and-red-light-with-smoke.jpg?s=640x640&k=20&c=v2DQUY8IVbli_6FH_9KAs6YWRXlDdYiBJHfp7JFh7NY=')">
-                <a href="https://644283d5bbf96b6923e6a3a8--ngtstudio.netlify.app/"
-                  style="position:absolute;bottom: 18px;;left:50%;transform:translateX(-50%);text-decoration: unset;">
-                  <img src="https://i.postimg.cc/5tnmTsLj/New-Project-1.png" style="margin-top: 44px" alt="logo">
-                  <div
-                    style="font-weight: 700;font-size: 24px;line-height: 32px;letter-spacing: 0.16em;color: #FFFFFF;margin-top: 24px;">
-                    NGT STUDIO</div>
-                </a>
-              </div>
-              <div align="left" class="content" style="background-color: #fefefe;font-family: 'SVN-Cera';padding: 32px 16px 48px;">
-                <div>
-                  <div style=" font-style: normal;font-size: 18px;line-height: 26px;color: #4b5563;">
-                    ${hiText}
-                  </div><br>
-                  <div class="fw-medium" style="font-style: normal;font-weight: 500;font-size: 18px;line-height: 26px;">
-                    <span style="color: #0f213d">
-                      ${mailText01}</span>
-                  </div>
-                </div>
-                <br>
-                <div class="fs-lg" style="color: #4B5563;font-size: 16px;line-height: 24px;">
-                  <div>
-                    ${mailText02}
-                  </div><br>
-                  <div>
-                    ${mailText03}
-                  </div>
-                </div>
-                <div style="text-align: center;margin-top: 40px;">
-                  <a href="https://ngtbackend-production.up.railway.app/auth/confirm-email?jwt=${jwt}"
-                    style="display: inline-block;cursor: pointer;text-decoration: unset;padding: 12px 24px;background: #4834f1;border-radius: 100px;">
-                    <span style="font-weight: 500;font-size: 16px;line-height: 24px;letter-spacing: 0.02em;color: #F3F4F6;">
-                      ${mailText04}
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>`,
-            Charset: 'UTF-8',
-          },
-        },
+      "content": [
+        {
+          "type": "text/html",
+          "value": content
+        }
+      ]
+    });
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': '161c0f8a5emsh6f0acc0af1ec2b6p11e379jsn7cd7c0697694',
+        'X-RapidAPI-Host': 'rapidprod-sendgrid-v1.p.rapidapi.com'
       },
+      data: data
     };
 
-    const sesConfig = {
-      accessKeyId: process.env.SES_ACCESS_KEY,
-      secretAccessKey: process.env.SES_SECRET_KEY,
-      region: `ap-southeast-2`,
-    };
-    const sesAws = new AWS.SES(sesConfig);
-
-    const sendPromise = sesAws.sendEmail(params).promise();
-
-    await sendPromise
-      .then(async () => console.log('success'))
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
       .catch((error) => {
-        throw new BadRequestException(error.message);
+        console.log(error);
       });
 
     return {
