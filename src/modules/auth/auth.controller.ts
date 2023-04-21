@@ -68,10 +68,14 @@ export class AuthController {
 
     if (typeof token === 'string') {
       // handle error case
-      return `https://6442539828ed063b4a5d4a51--ngtstudio.netlify.app/?token=null`;
+      return {
+        url: `https://6442539828ed063b4a5d4a51--ngtstudio.netlify.app/?token=null`,
+      };
     } else {
       // success case
-      return `https://6442539828ed063b4a5d4a51--ngtstudio.netlify.app/?token=${token.accessToken}`;
+      return {
+        url: `https://6442539828ed063b4a5d4a51--ngtstudio.netlify.app/?token=${token.accessToken}`,
+      };
     }
   }
 }
