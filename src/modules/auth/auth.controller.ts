@@ -65,6 +65,7 @@ export class AuthController {
   @Redirect()
   async googleAuthRedirect(@Req() req) {
     const token = await this.authService.googleLogin(req);
+
     if (typeof token === 'string') {
       // handle error case
       return `https://6442432058d3e228719007db--ngtstudio.netlify.app/?token=null`;
