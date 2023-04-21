@@ -247,23 +247,23 @@ export class AuthService {
     }
 
     try {
-      const check = this.prismaService.user.findUnique({
+      const check = await this.prismaService.user.findUnique({
         where: { user_name: req.user.email },
       });
 
       if (check) {
         throwIf(!check, new UnauthorizedException(EMAIL_NOT_FOUND));
         throwIf(
-          (await check).status == 'UNCONFIRM',
+          check.status == 'UNCONFIRM',
           new UnauthorizedException(USER_NOT_VERIFIED),
         );
         throwIf(
-          (await check).status !== 'ACTIVE',
+          check.status !== 'ACTIVE',
           new UnauthorizedException(USER_BLOCKED),
         );
         const token = this.generateToken(
-          (await check).id,
-          (await check).user_name,
+          check.id,
+          check.user_name,
           null,
         );
         return token;
@@ -279,13 +279,13 @@ export class AuthService {
           has_password: true,
         };
 
-        const newUser = this.prismaService.user.create({
+        const newUser = await this.prismaService.user.create({
           data: userData,
         });
 
         const token = this.generateToken(
-          (await newUser).id,
-          (await newUser).user_name,
+          newUser.id,
+          newUser.user_name,
           null,
         );
         return token;
