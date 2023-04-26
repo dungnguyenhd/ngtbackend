@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import {
   Injectable,
   NotFoundException,
@@ -20,13 +21,14 @@ import {
 import * as bcryptjs from 'bcryptjs';
 import { OnSuccessResponseDto } from './dto/auth.response.dto';
 import { SignupDto } from './dto/login.dto';
+import { UpdateProfileDto } from './dto/userprofile.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   // Normal Signup
   async signup(params: SignupDto): Promise<OnSuccessResponseDto> {
@@ -52,9 +54,9 @@ export class AuthService {
 
     const user = existingUser
       ? await this.prismaService.user.update({
-        where: { user_name: params.userName },
-        data: userData,
-      })
+          where: { user_name: params.userName },
+          data: userData,
+        })
       : await this.prismaService.user.create({ data: userData });
 
     const { accessToken } = this.generateToken(user.id, user.user_name, null);
@@ -165,44 +167,45 @@ export class AuthService {
         </div>
       </div>
     </div>
-  </div>`
+  </div>`;
 
     const axios = require('axios');
-    let data = JSON.stringify({
-      "personalizations": [
+    const data = JSON.stringify({
+      personalizations: [
         {
-          "to": [
+          to: [
             {
-              "email": email
-            }
+              email: email,
+            },
           ],
-          "subject": "[NGT Studio] CONFIRM ACCOUNT EMAIL"
-        }
+          subject: '[NGT Studio] CONFIRM ACCOUNT EMAIL',
+        },
       ],
-      "from": {
-        "email": "ngtstudio@dev.gg"
+      from: {
+        email: 'ngtstudio@dev.gg',
       },
-      "content": [
+      content: [
         {
-          "type": "text/html",
-          "value": content
-        }
-      ]
+          type: 'text/html',
+          value: content,
+        },
+      ],
     });
 
-    let config = {
+    const config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: 'https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send',
       headers: {
         'content-type': 'application/json',
         'X-RapidAPI-Key': '161c0f8a5emsh6f0acc0af1ec2b6p11e379jsn7cd7c0697694',
-        'X-RapidAPI-Host': 'rapidprod-sendgrid-v1.p.rapidapi.com'
+        'X-RapidAPI-Host': 'rapidprod-sendgrid-v1.p.rapidapi.com',
       },
-      data: data
+      data: data,
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
       })
@@ -261,11 +264,7 @@ export class AuthService {
           check.status !== 'ACTIVE',
           new UnauthorizedException(USER_BLOCKED),
         );
-        const token = this.generateToken(
-          check.id,
-          check.user_name,
-          null,
-        );
+        const token = this.generateToken(check.id, check.user_name, null);
         return token;
       } else {
         const userData = {
@@ -283,15 +282,38 @@ export class AuthService {
           data: userData,
         });
 
-        const token = this.generateToken(
-          newUser.id,
-          newUser.user_name,
-          null,
-        );
+        const token = this.generateToken(newUser.id, newUser.user_name, null);
         return token;
       }
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async updateProfile(params: UpdateProfileDto, userId) {
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: {
+        full_name: params.full_name,
+        avatar: params.avatar,
+      },
+      select: {
+        avatar: true,
+        created_at: true,
+        current_used_product: true,
+        email: true,
+        full_name: true,
+        has_password: true,
+        id: true,
+        last_login: true,
+        last_logout: true,
+        level: true,
+        status: true,
+        type: true,
+        updated_at: true,
+        user_id_social: true,
+        user_name: true,
+      },
+    });
   }
 }

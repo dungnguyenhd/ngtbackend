@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { AuthService } from './auth.service';
 import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Query,
   Redirect,
@@ -18,6 +20,8 @@ import { SignupDto, LoginDto } from './dto/login.dto';
 import { Auth } from '../common/decorators/auth.decorator';
 import { User } from '../common/decorators/user.decorator';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateProfileDto } from './dto/userprofile.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -77,5 +81,11 @@ export class AuthController {
         url: `https://ngtstudio.netlify.app/?token=${token.accessToken}`,
       };
     }
+  }
+
+  @Auth()
+  @Patch('profile')
+  uploadAvatar(@Body() params: UpdateProfileDto, @User() user) {
+    return this.authService.updateProfile(params, user.id);
   }
 }
