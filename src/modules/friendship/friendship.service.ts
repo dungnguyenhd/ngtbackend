@@ -19,7 +19,7 @@ export class FriendshipService {
       await this.prismaService.user.update({
         where: { id: user.id },
         data: {
-          status: params.status,
+          active: params.status,
         },
       });
       return { code: 200, message: 'Update user status success' };
