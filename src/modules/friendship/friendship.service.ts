@@ -106,25 +106,22 @@ export class FriendshipService {
       return { code: 404, message: 'Response request fail!' };
     }
   }
+
   async getUserFriendList(user: any, search: string) {
     const friendList = await this.prismaService.friendship.findMany({
       where: {
-        OR: [
-          { user_id: user.id },
-          { friend_id: user.id },
+        AND: [
           {
-            AND: [
-              { NOT: { user_name: user.user_name } },
-              {
-                OR: [
-                  { user_name: { contains: search ? search : undefined } },
-                  { friend_name: { contains: search ? search : undefined } },
-                ],
-              },
+            OR: [
+              { user_name: { contains: search ? search : undefined } },
+              { friend_name: { contains: search ? search : undefined } },
             ],
           },
+          {
+            OR: [{ user_id: user.id }, { friend_id: user.id }],
+          },
+          { isAccept: true },
         ],
-        isAccept: true,
       },
       select: {
         id: true,
