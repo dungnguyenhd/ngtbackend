@@ -5,6 +5,7 @@ import { User } from '../common/decorators/user.decorator';
 import {
   FriendRequestDto,
   ResponseFriendRequestDto,
+  UpdateUserStatusDto,
 } from './dto/friendship.dto';
 
 @Controller('friendship')
@@ -12,6 +13,11 @@ import {
 export class FriendshipController {
   constructor(private readonly friendshipService: FriendshipService) {
     //
+  }
+
+  @Patch('user-status')
+  updateUserStatus(@User() user, @Body() params: UpdateUserStatusDto) {
+    return this.friendshipService.updateUserStatus(user, params);
   }
 
   @Post('send-request')

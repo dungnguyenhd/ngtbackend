@@ -5,11 +5,28 @@ import {
   FRIEND_NOT_FOUND,
   FRIEND_REQUEST_ALREADY_SENT,
 } from '../common/constants/error.constant';
-import { ResponseFriendRequestDto } from './dto/friendship.dto';
+import {
+  ResponseFriendRequestDto,
+  UpdateUserStatusDto,
+} from './dto/friendship.dto';
 
 @Injectable()
 export class FriendshipService {
   constructor(private prismaService: PrismaService) {}
+
+  async updateUserStatus(user: any, params: UpdateUserStatusDto) {
+    try {
+      await this.prismaService.user.update({
+        where: { id: user.id },
+        data: {
+          status: params.status,
+        },
+      });
+      return { code: 200, message: 'Update user status success' };
+    } catch (err) {
+      return err;
+    }
+  }
 
   async sendFriendRequest(user: any, friendName: string) {
     try {

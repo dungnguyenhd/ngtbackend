@@ -10,3 +10,7 @@ export class ResponseFriendRequestDto {
   friendship_id: number;
   accept: boolean;
 }
+
+export class UpdateUserStatusDto {
+  status: string;
+}
