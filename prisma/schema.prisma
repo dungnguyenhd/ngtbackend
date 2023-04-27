@@ -20,6 +20,7 @@ model User {
   email                String?   @unique
   user_id_social       String?
   status               String?
+  active               String?
   level                String?
   created_at           DateTime  @default(now())
   updated_at           DateTime  @updatedAt

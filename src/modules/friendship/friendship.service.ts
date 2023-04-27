@@ -106,7 +106,6 @@ export class FriendshipService {
       return { code: 404, message: 'Response request fail!' };
     }
   }
-
   async getUserFriendList(user: any, search: string) {
     const friendList = await this.prismaService.friendship.findMany({
       where: {
@@ -136,19 +135,31 @@ export class FriendshipService {
       },
     });
 
-    const formattedFriendList = friendList.map((friendship) => {
-      if (friendship.user_id === user.id) {
-        return {
-          friendshipId: friendship.id,
-          friend: friendship.friend_name,
-        };
-      } else {
-        return {
-          friendshipId: friendship.id,
-          friend: friendship.user_name,
-        };
-      }
-    });
+    const formattedFriendList = await Promise.all(
+      friendList.map(async (friendship) => {
+        if (friendship.user_id === user.id) {
+          const friend = await this.prismaService.user.findUnique({
+            where: { id: friendship.friend_id },
+          });
+
+          return {
+            friendshipId: friendship.id,
+            friend: friendship.friend_name,
+            active: friend ? friend.active : 'UNKNOWN',
+          };
+        } else {
+          const friend = await this.prismaService.user.findUnique({
+            where: { id: friendship.user_id },
+          });
+
+          return {
+            friendshipId: friendship.id,
+            friend: friendship.user_name,
+            active: friend ? friend.active : 'UNKNOWN',
+          };
+        }
+      }),
+    );
 
     return formattedFriendList;
   }
