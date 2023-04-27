@@ -11,6 +11,6 @@ export class ResponseFriendRequestDto {
   accept: boolean;
 }
 
-export class UpdateUserStatusDto {
-  status: string;
+export class UpdateUserActiveDto {
+  active: string;
 }

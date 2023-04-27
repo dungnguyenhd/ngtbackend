@@ -7,19 +7,19 @@ import {
 } from '../common/constants/error.constant';
 import {
   ResponseFriendRequestDto,
-  UpdateUserStatusDto,
+  UpdateUserActiveDto,
 } from './dto/friendship.dto';
 
 @Injectable()
 export class FriendshipService {
   constructor(private prismaService: PrismaService) {}
 
-  async updateUserStatus(user: any, params: UpdateUserStatusDto) {
+  async updateUserActive(user: any, params: UpdateUserActiveDto) {
     try {
       await this.prismaService.user.update({
         where: { id: user.id },
         data: {
-          active: params.status,
+          active: params.active,
         },
       });
       return { code: 200, message: 'Update user status success' };
