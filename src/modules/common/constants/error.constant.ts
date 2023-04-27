@@ -26,26 +26,14 @@ export const USER_NOT_VERIFIED = {
   messageCode: 'This email is not verified',
 };
 
-// Not found
-export const CHAMPION_NOT_FOUND = { code: 1050, message: 'Champion not found' };
+export const FRIEND_NOT_FOUND = { code: 2004, messageCode: 'Friend not found' };
 
-// Is crawl
-export const NOT_CRAWL_ALL = { code: 1101, message: "Hasn't crawl all yet" };
-export const NEED_TO_CRAWL_ALL_NEW_PATCH = {
-  code: 1102,
-  message:
-    'New items, spells, runes is missing. Need to crawl all to get new patch',
+export const FRIEND_REQUEST_ALREADY_SENT = {
+  code: 2005,
+  messageCode: 'Friend request already sent, please wait for acception',
 };
 
-// provider
-export const PROVIDER_NOT_FOUND = { code: 1201, message: 'Provider not found' };
-
-// product
-export const PRODUCT_NOT_FOUND = { code: 1301, message: 'Product not found' };
-export const PRODUCT_DUPLICATE = {
-  code: 1302,
-  message: 'Product name already exist',
+export const ALREADY_FRIEND = {
+  code: 2006,
+  messageCode: 'This person is already your friend!',
 };
-
-// order
-export const ORDER_NOT_FOUND = { code: 1401, message: 'Order not found' };

@@ -11,22 +11,34 @@ generator client {
 }
 
 model User {
-  id                   Int           @id @default(autoincrement())
-  user_name            String        @unique
+  id                   Int       @id @default(autoincrement())
+  user_name            String    @unique
   password             String?
   full_name            String?
   avatar               String?
   type                 String?
-  email                String?       @unique
+  email                String?   @unique
   user_id_social       String?
   status               String?
   level                String?
-  created_at           DateTime      @default(now())
-  updated_at           DateTime      @updatedAt
+  created_at           DateTime  @default(now())
+  updated_at           DateTime  @updatedAt
   last_login           DateTime?
   last_logout          DateTime?
   current_used_product Int?
-  has_password         Boolean       @default(true)
+  has_password         Boolean   @default(true)
 
   @@map("user")
+}
+
+model Friendship {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  user_name   String?
+  friend_id   Int
+  friend_name String?
+  isAccept    Boolean
+  created_at  DateTime @default(now())
+
+  @@map("friendship")
 }
