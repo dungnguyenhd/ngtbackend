@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post, Sse } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Sse,
+} from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
 import { Auth } from '../common/decorators/auth.decorator';
 import { User } from '../common/decorators/user.decorator';
@@ -26,9 +35,9 @@ export class FriendshipController {
     return this.friendshipService.responseFriendRequest(params);
   }
 
-  @Sse('friend-list/:search')
+  @Sse('friend-list')
   async getUserFriendList(
-    @Param('search') search: string,
+    @Query('search') search: string,
     @User() user,
   ): Promise<Observable<any>> {
     const friendList = await this.friendshipService.getUserFriendList(
