@@ -16,11 +16,6 @@ export class FriendshipController {
     //
   }
 
-  @Patch('user-active')
-  updateUserActive(@User() user, @Body() params: UpdateUserActiveDto) {
-    return this.friendshipService.updateUserActive(user, params);
-  }
-
   @Post('send-request')
   sendFriendRequest(@User() user, @Body() params: FriendRequestDto) {
     return this.friendshipService.sendFriendRequest(user, params.friend_name);

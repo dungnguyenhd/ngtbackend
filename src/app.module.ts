@@ -4,10 +4,13 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { FriendshipModule } from './modules/friendship/friendship.module';
+import { AppGateway } from './app/app.gateway';
+import { FriendshipService } from './modules/friendship/friendship.service';
+import { PrismaService } from './modules/common/prisma/prisma.service';
 
 @Module({
   imports: [AuthModule, ChatModule, FriendshipModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway, FriendshipService, PrismaService],
 })
 export class AppModule {}

@@ -14,12 +14,12 @@ import {
 export class FriendshipService {
   constructor(private prismaService: PrismaService) {}
 
-  async updateUserActive(user: any, params: UpdateUserActiveDto) {
+  async updateUserActive(userId: number, status: string) {
     try {
       await this.prismaService.user.update({
-        where: { id: user.id },
+        where: { id: userId },
         data: {
-          active: params.active,
+          active: status,
         },
       });
       return { code: 200, message: 'Update user status success' };
