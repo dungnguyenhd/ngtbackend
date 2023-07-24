@@ -27,10 +27,12 @@ export class FriendsGateway
 
   async sendOnlineUsers(client?: Socket) {
     const onlineUsers = Array.from(this.connectedUsers);
+    console.log('co goi emit');
     if (client) {
       console.log('chay emit');
       client.emit('onlineUsers', onlineUsers);
     } else {
+      console.log('chay emit server');
       this.server.emit('onlineUsers', onlineUsers);
     }
   }
