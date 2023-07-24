@@ -102,8 +102,8 @@ export class FriendshipService {
         AND: [
           {
             OR: [
-              { user_name: { contains: search ? search : undefined } },
-              { friend_name: { contains: search ? search : undefined } },
+              { user_fullName: { contains: search ? search : undefined } },
+              { friend_fullName: { contains: search ? search : undefined } },
             ],
           },
           {

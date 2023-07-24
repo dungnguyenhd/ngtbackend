@@ -11,10 +11,7 @@ import { FriendsGateway } from './friendship.gateway';
 @Controller('friendship')
 @Auth()
 export class FriendshipController {
-  constructor(
-    private readonly friendshipService: FriendshipService,
-    private readonly friendsGateway: FriendsGateway,
-  ) {
+  constructor(private readonly friendshipService: FriendshipService) {
     //
   }
 
