@@ -5,29 +5,11 @@ import {
   FRIEND_NOT_FOUND,
   FRIEND_REQUEST_ALREADY_SENT,
 } from '../common/constants/error.constant';
-import {
-  ResponseFriendRequestDto,
-  UpdateUserActiveDto,
-} from './dto/friendship.dto';
+import { ResponseFriendRequestDto } from './dto/friendship.dto';
 
 @Injectable()
 export class FriendshipService {
   constructor(private prismaService: PrismaService) {}
-
-  async updateUserActive(userId: number, status: string) {
-    try {
-      await this.prismaService.user.update({
-        where: { id: userId },
-        data: {
-          active: status,
-        },
-      });
-      return { code: 200, message: 'Update user status success' };
-    } catch (err) {
-      return err;
-    }
-  }
-
   async sendFriendRequest(user: any, friendName: string) {
     try {
       const friend = await this.prismaService.user.findUnique({
@@ -142,7 +124,7 @@ export class FriendshipService {
           return {
             friendshipId: friendship.id,
             friend: friendship.friend_name,
-            active: friend ? friend.active : 'UNKNOWN',
+            active: friend ? friend.active : 'OFFLINE',
           };
         } else {
           const friend = await this.prismaService.user.findUnique({
@@ -152,7 +134,7 @@ export class FriendshipService {
           return {
             friendshipId: friendship.id,
             friend: friendship.user_name,
-            active: friend ? friend.active : 'UNKNOWN',
+            active: friend ? friend.active : 'OFFLINE',
           };
         }
       }),

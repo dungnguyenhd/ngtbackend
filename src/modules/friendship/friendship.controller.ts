@@ -1,27 +1,20 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  Sse,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
 import { Auth } from '../common/decorators/auth.decorator';
 import { User } from '../common/decorators/user.decorator';
 import {
   FriendRequestDto,
   ResponseFriendRequestDto,
-  UpdateUserActiveDto,
 } from './dto/friendship.dto';
-import { Observable, interval, map, merge, of } from 'rxjs';
+import { FriendsGateway } from './friendship.gateway';
 
 @Controller('friendship')
 @Auth()
 export class FriendshipController {
-  constructor(private readonly friendshipService: FriendshipService) {
+  constructor(
+    private readonly friendshipService: FriendshipService,
+    private readonly friendsGateway: FriendsGateway,
+  ) {
     //
   }
 
@@ -35,27 +28,18 @@ export class FriendshipController {
     return this.friendshipService.responseFriendRequest(params);
   }
 
-  @Sse('friend-list')
-  async getUserFriendList(
-    @Query('search') search: string,
-    @User() user,
-  ): Promise<Observable<any>> {
+  @Get()
+  async getOnlineUsers() {
+    const onlineUsers = await this.friendsGateway.sendOnlineUsers();
+    return { onlineUsers };
+  }
+
+  @Get('list')
+  async getUserFriendList(@Query('search') search: string, @User() user) {
     const friendList = await this.friendshipService.getUserFriendList(
       user,
       search,
     );
-
-    console.log(search);
-
-    return merge(
-      of({
-        data: friendList,
-      }),
-      interval(60000).pipe(
-        map(() => ({
-          data: friendList,
-        })),
-      ),
-    );
+    return { friendList };
   }
 }
