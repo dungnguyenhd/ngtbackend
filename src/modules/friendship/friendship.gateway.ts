@@ -22,7 +22,7 @@ export class FriendsGateway
   async handleDisconnect(client: Socket) {
     const userId = client.handshake.query.userId as string;
     this.connectedUsers.delete(Number(userId));
-    await this.sendOnlineUsers(client);
+    await this.sendOnlineUsers();
   }
 
   async sendOnlineUsers(client?: Socket) {
