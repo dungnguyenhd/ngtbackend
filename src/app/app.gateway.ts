@@ -6,7 +6,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { FriendshipService } from 'src/modules/friendship/friendship.service';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class AppGateway implements OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
