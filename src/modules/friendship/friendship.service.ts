@@ -138,4 +138,20 @@ export class FriendshipService {
 
     return formattedFriendList;
   }
+
+  async searchForUsers(search: string, take: number) {
+    const conditions = search
+      ? {
+          OR: [
+            { user_name: { contains: search } },
+            { full_name: { contains: search } },
+          ],
+        }
+      : {};
+
+    return this.prismaService.user.findMany({
+      where: conditions,
+      take: take,
+    });
+  }
 }

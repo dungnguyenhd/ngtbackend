@@ -15,6 +15,18 @@ export class FriendshipController {
     //
   }
 
+  @Get('search-friend-list')
+  async searchForUsers(
+    @Query('search') search: string,
+    @Query('take') take: string,
+  ) {
+    const userList = await this.friendshipService.searchForUsers(
+      search,
+      Number(take),
+    );
+    return { userList };
+  }
+
   @Post('send-request')
   sendFriendRequest(@User() user, @Body() params: FriendRequestDto) {
     return this.friendshipService.sendFriendRequest(user, params.friend_name);
