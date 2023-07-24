@@ -93,7 +93,10 @@ export class FriendshipService {
     }
   }
 
-  async getUserFriendList(user: any, search: string) {
+  async getUserFriendList(userId: number, search: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
     const friendList = await this.prismaService.friendship.findMany({
       where: {
         AND: [

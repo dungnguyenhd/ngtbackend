@@ -28,16 +28,10 @@ export class FriendshipController {
     return this.friendshipService.responseFriendRequest(params);
   }
 
-  @Get()
-  async getOnlineUsers() {
-    const onlineUsers = await this.friendsGateway.sendOnlineUsers();
-    return { onlineUsers };
-  }
-
   @Get('list')
   async getUserFriendList(@Query('search') search: string, @User() user) {
     const friendList = await this.friendshipService.getUserFriendList(
-      user,
+      user.id,
       search,
     );
     return { friendList };
