@@ -33,11 +33,13 @@ export class FriendsGateway
     const friendList = await this.friendService.getUserFriendList(userId, null);
     friendList.forEach((friend) => {
       const clientSocket = this.getClientByUserId(friend.friendId);
-      clientSocket.emit('onlineUsers', onlineUsers);
+      if (clientSocket) {
+        clientSocket.emit('onlineUsers', onlineUsers);
+      }
     });
   }
 
-  getClientByUserId(userId: number): Socket | undefined {
+  getClientByUserId(userId: number): Socket {
     return this.connectedUsers.get(userId);
   }
 }
