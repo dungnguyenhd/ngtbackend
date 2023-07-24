@@ -29,7 +29,7 @@ export class FriendshipController {
 
   @Post('send-request')
   sendFriendRequest(@User() user, @Query('friendId') friendId: number) {
-    return this.friendshipService.sendFriendRequest(user, friendId);
+    return this.friendshipService.sendFriendRequest(user, Number(friendId));
   }
 
   @Patch('response-friend-request')
