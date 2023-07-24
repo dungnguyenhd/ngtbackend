@@ -28,8 +28,8 @@ export class FriendshipController {
   }
 
   @Post('send-request')
-  sendFriendRequest(@User() user, @Body() params: FriendRequestDto) {
-    return this.friendshipService.sendFriendRequest(user, params.friend_name);
+  sendFriendRequest(@User() user, @Query('friendId') friendId: number) {
+    return this.friendshipService.sendFriendRequest(user, friendId);
   }
 
   @Patch('response-friend-request')

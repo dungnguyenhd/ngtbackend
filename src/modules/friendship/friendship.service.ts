@@ -10,10 +10,10 @@ import { ResponseFriendRequestDto } from './dto/friendship.dto';
 @Injectable()
 export class FriendshipService {
   constructor(private prismaService: PrismaService) {}
-  async sendFriendRequest(user: any, friendName: string) {
+  async sendFriendRequest(user: any, friendId: number) {
     try {
       const friend = await this.prismaService.user.findUnique({
-        where: { user_name: friendName },
+        where: { id: friendId },
       });
 
       if (!friend) {
