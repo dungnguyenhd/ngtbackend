@@ -19,18 +19,19 @@ export class FriendsGateway
   async handleConnection(client: Socket) {
     const userId = client.handshake.query.userId as string;
     this.connectedUsers.set(Number(userId), client);
-    await this.sendOnlineUsers(Number(userId));
+    await this.sendOnlineUsers(Number(userId), client);
   }
 
   async handleDisconnect(client: Socket) {
     const userId = client.handshake.query.userId as string;
     this.connectedUsers.delete(Number(userId));
-    await this.sendOnlineUsers(Number(userId));
+    await this.sendOnlineUsers(Number(userId), client);
   }
 
-  async sendOnlineUsers(userId: number) {
+  async sendOnlineUsers(userId: number, client: Socket) {
     const onlineUsers = Array.from(this.connectedUsers.keys());
     const friendList = await this.friendService.getUserFriendList(userId, null);
+    client.emit('onlineUsers', onlineUsers);
     friendList.forEach((friend) => {
       const clientSocket = this.getClientByUserId(friend.friendId);
       if (clientSocket) {
