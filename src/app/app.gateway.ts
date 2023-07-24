@@ -14,9 +14,6 @@ export class AppGateway implements OnGatewayDisconnect {
   constructor(private readonly friendService: FriendshipService) {}
 
   handleConnection(client: Socket) {
-    // Xử lý khi kết nối
-    console.log('Client connected');
-
     // Lấy userId từ thông báo kết nối của client
     const userId = client.handshake.query.userId as string;
 
@@ -27,9 +24,6 @@ export class AppGateway implements OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-    // Xử lý khi mất kết nối
-    console.log('Client disconnected');
-
     // Lấy userId từ thông báo kết nối của client
     const userId = client.handshake.query.userId as string;
 
