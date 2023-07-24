@@ -33,13 +33,17 @@ model User {
 }
 
 model Friendship {
-  id          Int      @id @default(autoincrement())
-  user_id     Int
-  user_name   String?
-  friend_id   Int
-  friend_name String?
-  isAccept    Boolean
-  created_at  DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  user_id         Int
+  user_name       String?
+  friend_id       Int
+  friend_name     String?
+  user_fullName String?
+  user_avatar    String?
+  friend_fullName String?
+  friend_avatar    String?
+  isAccept        Boolean
+  created_at      DateTime @default(now())
 
   @@map("friendship")
 }

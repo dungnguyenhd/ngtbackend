@@ -34,8 +34,8 @@ export class FriendshipService {
       const readyFriendship = await this.prismaService.friendship.findFirst({
         where: {
           OR: [
-            { user_id: user.id, friend_id: friend.id },
-            { user_id: friend.id, friend_id: user.id },
+            { user_id: user.id, friend_id: friend.id, isAccept: true },
+            { user_id: friend.id, friend_id: user.id, isAccept: true },
           ],
         },
       });
@@ -48,6 +48,10 @@ export class FriendshipService {
         data: {
           user_id: user.id,
           user_name: user.user_name,
+          user_avatar: user.avatar ? user.avatar : null,
+          user_fullName: user.full_name ? user.full_name : null,
+          friend_avatar: friend.avatar ? friend.avatar : null,
+          friend_fullName: friend.full_name ? friend.full_name : null,
           friend_id: friend.id,
           friend_name: friend.user_name,
           isAccept: false,
@@ -79,7 +83,7 @@ export class FriendshipService {
       }
 
       return {
-        code: 200,
+        code: params.accept ? 200 : 201,
         message: params.accept
           ? 'Accepted friend request'
           : 'Reject friend request',
@@ -105,36 +109,25 @@ export class FriendshipService {
           { isAccept: true },
         ],
       },
-      select: {
-        id: true,
-        user_name: true,
-        friend_name: true,
-        user_id: true,
-        friend_id: true,
-      },
     });
 
     const formattedFriendList = await Promise.all(
       friendList.map(async (friendship) => {
         if (friendship.user_id === user.id) {
-          const friend = await this.prismaService.user.findUnique({
-            where: { id: friendship.friend_id },
-          });
-
           return {
             friendshipId: friendship.id,
-            friend: friendship.friend_name,
-            active: friend ? friend.active : 'OFFLINE',
+            friendId: friendship.friend_id,
+            friendName: friendship.friend_name,
+            friendAvatar: friendship.friend_avatar,
+            friendFullname: friendship.friend_fullName,
           };
         } else {
-          const friend = await this.prismaService.user.findUnique({
-            where: { id: friendship.user_id },
-          });
-
           return {
             friendshipId: friendship.id,
-            friend: friendship.user_name,
-            active: friend ? friend.active : 'OFFLINE',
+            friendId: friendship.user_id,
+            friendName: friendship.user_name,
+            friendAvatar: friendship.user_avatar,
+            friendFullname: friendship.user_fullName,
           };
         }
       }),
