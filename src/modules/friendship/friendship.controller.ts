@@ -19,10 +19,12 @@ export class FriendshipController {
   async searchForUsers(
     @Query('search') search: string,
     @Query('take') take: string,
+    @User() user,
   ) {
     const userList = await this.friendshipService.searchForUsers(
       search,
       Number(take),
+      user.id,
     );
     return { userList };
   }
