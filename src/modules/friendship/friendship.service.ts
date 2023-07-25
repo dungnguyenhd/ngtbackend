@@ -176,6 +176,7 @@ export class FriendshipService {
                 ],
               }
             : {},
+          { isAccept: false },
         ],
       },
     });
