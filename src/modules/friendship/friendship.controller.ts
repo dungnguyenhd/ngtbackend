@@ -27,6 +27,11 @@ export class FriendshipController {
     return { userList };
   }
 
+  @Get('user-friend-requests')
+  async getAllFriendRequest(@Query('search') search: string, @User() user) {
+    return this.friendshipService.getUserFriendRequest(user, search);
+  }
+
   @Post('send-request')
   sendFriendRequest(@User() user, @Query('friendId') friendId: number) {
     return this.friendshipService.sendFriendRequest(user, Number(friendId));

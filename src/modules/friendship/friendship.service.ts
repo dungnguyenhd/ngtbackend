@@ -80,6 +80,12 @@ export class FriendshipService {
             friend_id: updatedFriendship.user_id,
           },
         });
+
+        if (!params.accept) {
+          await this.prismaService.friendship.delete({
+            where: { id: params.friendship_id },
+          });
+        }
       }
 
       return {
@@ -153,5 +159,27 @@ export class FriendshipService {
       where: conditions,
       take: take,
     });
+  }
+
+  async getUserFriendRequest(user, search: string) {
+    const friend_request = await this.prismaService.friendship.findMany({
+      where: {
+        AND: [
+          { OR: [{ user_id: user.id }, { friend_id: user.id }] },
+          search
+            ? {
+                OR: [
+                  { friend_name: { contains: search } },
+                  { user_name: { contains: search } },
+                  { friend_fullName: { contains: search } },
+                  { user_fullName: { contains: search } },
+                ],
+              }
+            : {},
+        ],
+      },
+    });
+
+    return friend_request;
   }
 }
