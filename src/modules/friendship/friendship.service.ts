@@ -5,12 +5,13 @@ import {
   FRIEND_NOT_FOUND,
   FRIEND_REQUEST_ALREADY_SENT,
 } from '../common/constants/error.constant';
-import { ResponseFriendRequestDto } from './dto/friendship.dto';
+import { Friend, ResponseFriendRequestDto } from './dto/friendship.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class FriendshipService {
   constructor(private prismaService: PrismaService) {}
-  async sendFriendRequest(user: any, friendId: number) {
+  async sendFriendRequest(userId: number, friendId: number) {
     try {
       const friend = await this.prismaService.user.findUnique({
         where: { id: friendId },
@@ -22,7 +23,7 @@ export class FriendshipService {
 
       const existingFriendship = await this.prismaService.friendship.findFirst({
         where: {
-          user_id: user.id,
+          user_id: userId,
           friend_id: friend.id,
         },
       });
@@ -34,8 +35,8 @@ export class FriendshipService {
       const readyFriendship = await this.prismaService.friendship.findFirst({
         where: {
           OR: [
-            { user_id: user.id, friend_id: friend.id, isAccept: true },
-            { user_id: friend.id, friend_id: user.id, isAccept: true },
+            { user_id: userId, friend_id: friend.id, isAccept: true },
+            { user_id: friend.id, friend_id: userId, isAccept: true },
           ],
         },
       });
@@ -46,14 +47,8 @@ export class FriendshipService {
 
       await this.prismaService.friendship.create({
         data: {
-          user_id: user.id,
-          user_name: user.user_name,
-          user_avatar: user.avatar ? user.avatar : null,
-          user_fullName: user.full_name ? user.full_name : null,
-          friend_avatar: friend.avatar ? friend.avatar : null,
-          friend_fullName: friend.full_name ? friend.full_name : null,
+          user_id: userId,
           friend_id: friend.id,
-          friend_name: friend.user_name,
           isAccept: false,
         },
       });
@@ -174,26 +169,28 @@ export class FriendshipService {
     });
   }
 
-  async getUserFriendRequest(user, search: string) {
-    const friend_request = await this.prismaService.friendship.findMany({
-      where: {
-        AND: [
-          { OR: [{ user_id: user.id }, { friend_id: user.id }] },
-          search
-            ? {
-                OR: [
-                  { friend_name: { contains: search } },
-                  { user_name: { contains: search } },
-                  { friend_fullName: { contains: search } },
-                  { user_fullName: { contains: search } },
-                ],
-              }
-            : {},
-          { isAccept: false },
-        ],
-      },
-    });
+  async getUserFriendRequest(userId: number, search: string) {
+    const query = search
+      ? `(u.user_name LIKE '%${search}%' OR u.full_name LIKE '%${search}%') AND`
+      : ``;
 
-    return friend_request;
+    const raw_query =
+      Prisma.raw(`SELECT fs.id as id, fs.user_id as user_id, fs.friend_id as friend_id, u.user_name as friend_name, u.full_name as friend_fullName, u.avatar as friend_avatar, fs.isAccept as isAccept, fs.created_at as created_at
+    FROM railway.friendship fs INNER JOIN railway.user u ON fs.friend_id = u.id WHERE ${query} fs.user_id = ${userId} AND fs.isAccept = 0`);
+
+    const friends = await this.prismaService.$queryRaw<Friend[]>(raw_query);
+
+    const formattedFriends = friends.map((friend) => ({
+      id: friend.id,
+      user_id: friend.user_id,
+      friend_id: friend.friend_id,
+      friend_name: friend.friend_name,
+      friend_fullName: friend.friend_fullName,
+      friend_avatar: friend.friend_avatar,
+      isAccept: friend.isAccept,
+      created_at: friend.created_at,
+    }));
+
+    return formattedFriends;
   }
 }

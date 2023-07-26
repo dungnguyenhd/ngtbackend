@@ -2,11 +2,7 @@ import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
 import { Auth } from '../common/decorators/auth.decorator';
 import { User } from '../common/decorators/user.decorator';
-import {
-  FriendRequestDto,
-  ResponseFriendRequestDto,
-} from './dto/friendship.dto';
-import { FriendsGateway } from './friendship.gateway';
+import { ResponseFriendRequestDto } from './dto/friendship.dto';
 
 @Controller('friendship')
 @Auth()
@@ -31,12 +27,12 @@ export class FriendshipController {
 
   @Get('user-friend-requests')
   async getAllFriendRequest(@Query('search') search: string, @User() user) {
-    return this.friendshipService.getUserFriendRequest(user, search);
+    return this.friendshipService.getUserFriendRequest(user.id, search);
   }
 
   @Post('send-request')
   sendFriendRequest(@User() user, @Query('friendId') friendId: number) {
-    return this.friendshipService.sendFriendRequest(user, Number(friendId));
+    return this.friendshipService.sendFriendRequest(user.id, Number(friendId));
   }
 
   @Patch('response-friend-request')
