@@ -47,3 +47,14 @@ model Friendship {
 
   @@map("friendship")
 }
+
+model Messenger {
+  id              Int      @id @default(autoincrement())
+  user_id         Int
+  friend_id       Int
+  message         String?  @db.LongText
+  image           String?
+  created_at      DateTime @default(now())
+
+  @@map("messenger")
+}

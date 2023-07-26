@@ -193,4 +193,27 @@ export class FriendshipService {
 
     return formattedFriends;
   }
+
+  async saveMessage(userId: number, friendId: number, message: string, image: string): Promise<void> {
+    await this.prismaService.messenger.create({
+      data: {
+        user_id: userId,
+        friend_id: friendId,
+        message: message,
+        image: image,
+      }
+    });
+  }
+  
+  async getChatHistory(userId: number) {
+    return this.prismaService.messenger.findMany({
+      where: {
+        OR: [
+          {  user_id: userId },
+          { friend_id: userId },
+        ]
+      },
+      orderBy: { created_at: 'asc' },
+    });
+  }
 }

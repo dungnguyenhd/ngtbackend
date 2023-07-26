@@ -3,6 +3,7 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  SubscribeMessage,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { FriendshipService } from './friendship.service';
@@ -20,6 +21,7 @@ export class FriendsGateway
     const userId = client.handshake.query.userId as string;
     this.connectedUsers.set(Number(userId), client);
     await this.sendOnlineUsers(Number(userId), client);
+    await this.sendChatHistory(Number(userId));
   }
 
   async handleDisconnect(client: Socket) {
@@ -38,6 +40,28 @@ export class FriendsGateway
         clientSocket.emit('onlineUsers', onlineUsers);
       }
     });
+  }
+
+  @SubscribeMessage('sendMessage')
+  async handleSendMessage(client: Socket, payload: {userId: number, friendId: number, message: string, image: string}) {
+    const { userId, friendId, message, image } = payload;
+    this.sendToUser(userId, { message, image });
+    await this.friendService.saveMessage(userId, friendId, message, image);
+  }
+
+  private async sendToUser(userId: number, messageData: { message: string; image: string }) {
+    const socket = this.connectedUsers.get(userId);
+    if (socket) {
+      socket.emit('newMessage', messageData);
+    }
+  }
+
+  private async sendChatHistory(userId: number) {
+    const chatHistory = await this.friendService.getChatHistory(userId);
+    const socket = this.connectedUsers.get(userId);
+    if (socket) {
+      socket.emit('chatHistory', chatHistory);
+    }
   }
 
   getClientByUserId(userId: number): Socket {
