@@ -45,14 +45,19 @@ export class FriendsGateway
   @SubscribeMessage('sendMessage')
   async handleSendMessage(client: Socket, payload: {userId: number, friendId: number, message: string, image: string}) {
     const { userId, friendId, message, image } = payload;
-    this.sendToUser(userId, { message, image });
+    this.sendToUser(userId, friendId, { message, image });
+    console.log(message);
     await this.friendService.saveMessage(userId, friendId, message, image);
   }
 
-  private async sendToUser(userId: number, messageData: { message: string; image: string }) {
+  private async sendToUser(userId: number, friendId: number, messageData: { message: string; image: string }) {
     const socket = this.connectedUsers.get(userId);
+    const friendSocket = this.connectedUsers.get(friendId)
     if (socket) {
       socket.emit('newMessage', messageData);
+      if (friendSocket) {
+        friendSocket.emit('newMessage', messageData);
+      }
     }
   }
 
