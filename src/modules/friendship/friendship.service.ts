@@ -6,7 +6,7 @@ import {
   FRIEND_REQUEST_ALREADY_SENT,
 } from '../common/constants/error.constant';
 import { Friend, ResponseFriendRequestDto } from './dto/friendship.dto';
-import { Prisma } from '@prisma/client';
+import { Messenger, Prisma } from '@prisma/client';
 
 @Injectable()
 export class FriendshipService {
@@ -194,24 +194,27 @@ export class FriendshipService {
     return formattedFriends;
   }
 
-  async saveMessage(userId: number, friendId: number, message: string, image: string): Promise<void> {
-    await this.prismaService.messenger.create({
+  async saveMessage(
+    userId: number,
+    friendId: number,
+    message: string,
+    image: string,
+  ): Promise<Messenger> {
+    const saveMessage = await this.prismaService.messenger.create({
       data: {
         user_id: userId,
         friend_id: friendId,
         message: message,
         image: image,
-      }
+      },
     });
+    return saveMessage;
   }
-  
+
   async getChatHistory(userId: number) {
     return this.prismaService.messenger.findMany({
       where: {
-        OR: [
-          {  user_id: userId },
-          { friend_id: userId },
-        ]
+        OR: [{ user_id: userId }, { friend_id: userId }],
       },
       orderBy: { created_at: 'asc' },
     });
