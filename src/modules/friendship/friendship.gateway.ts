@@ -60,20 +60,19 @@ export class FriendsGateway
       message,
       image,
     );
-    this.sendToUser(client, userId, friendId, {
+    this.sendToUser(client, friendId, {
       id: newMessage.id,
       user_id: newMessage.user_id,
       friend_id: newMessage.friend_id,
       message,
       image,
-      createdAt: newMessage.created_at,
+      created_at: newMessage.created_at,
     });
     console.log(message);
   }
 
   private async sendToUser(
     client: Socket,
-    userId: number,
     friendId: number,
     messageData: {
       id: number;
@@ -81,15 +80,11 @@ export class FriendsGateway
       friend_id: number;
       message: string;
       image: string;
-      createdAt: DateTime;
+      created_at: DateTime;
     },
   ) {
-    const friendSocket = this.connectedUsers.get(friendId);
     if (client) {
       client.emit('newMessage', messageData);
-      if (friendSocket) {
-        friendSocket.emit('newMessage', messageData);
-      }
     }
   }
 
