@@ -52,6 +52,7 @@ export class FriendsGateway
       image: string;
     },
   ) {
+    console.log('emit sendMessage');
     const { userId, friendId, message, image } = payload;
     const friendSocket = this.connectedUsers.get(friendId);
 
