@@ -22,7 +22,7 @@ export class FriendsGateway
     const userId = client.handshake.query.userId as string;
     this.connectedUsers.set(Number(userId), client);
     await this.sendOnlineUsers(Number(userId), client);
-    await this.sendChatHistory(Number(userId));
+    await this.sendChatHistory(client, Number(userId));
   }
 
   async handleDisconnect(client: Socket) {
@@ -54,19 +54,11 @@ export class FriendsGateway
     },
   ) {
     const { userId, friendId, message, image } = payload;
-    const newMessage = await this.friendService.saveMessage(
-      userId,
-      friendId,
-      message,
-      image,
-    );
     this.sendToUser(client, friendId, {
-      id: newMessage.id,
-      user_id: newMessage.user_id,
-      friend_id: newMessage.friend_id,
+      user_id: userId,
+      friend_id: friendId,
       message,
       image,
-      created_at: newMessage.created_at,
     });
     console.log(message);
   }
@@ -75,24 +67,32 @@ export class FriendsGateway
     client: Socket,
     friendId: number,
     messageData: {
-      id: number;
       user_id: number;
       friend_id: number;
       message: string;
       image: string;
-      created_at: DateTime;
     },
   ) {
+    const friendSocket = this.connectedUsers.get(friendId);
+
     if (client) {
-      client.emit('newMessage', messageData);
+      const newMessage = await this.friendService.saveMessage(
+        messageData.user_id,
+        messageData.friend_id,
+        messageData.message,
+        messageData.image,
+      );
+      client.emit('newMessage', newMessage);
+      if (friendSocket) {
+        friendSocket.emit('newMessage', newMessage);
+      }
     }
   }
 
-  private async sendChatHistory(userId: number) {
+  private async sendChatHistory(client: Socket, userId: number) {
     const chatHistory = await this.friendService.getChatHistory(userId);
-    const socket = this.connectedUsers.get(userId);
-    if (socket) {
-      socket.emit('chatHistory', chatHistory);
+    if (client) {
+      client.emit('chatHistory', chatHistory);
     }
   }
 
