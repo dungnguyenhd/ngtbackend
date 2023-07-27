@@ -7,6 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { FriendshipService } from './friendship.service';
+import { DateTime } from 'aws-sdk/clients/devicefarm';
 
 @WebSocketGateway({ cors: true })
 export class FriendsGateway
@@ -59,17 +60,19 @@ export class FriendsGateway
       message,
       image,
     );
-    this.sendToUser(userId, friendId, {
+    this.sendToUser(client, userId, friendId, {
       id: newMessage.id,
       user_id: newMessage.user_id,
       friend_id: newMessage.friend_id,
       message,
       image,
+      createdAt: newMessage.created_at,
     });
     console.log(message);
   }
 
   private async sendToUser(
+    client: Socket,
     userId: number,
     friendId: number,
     messageData: {
@@ -78,12 +81,12 @@ export class FriendsGateway
       friend_id: number;
       message: string;
       image: string;
+      createdAt: DateTime;
     },
   ) {
-    const socket = this.connectedUsers.get(userId);
     const friendSocket = this.connectedUsers.get(friendId);
-    if (socket) {
-      socket.emit('newMessage', messageData);
+    if (client) {
+      client.emit('newMessage', messageData);
       if (friendSocket) {
         friendSocket.emit('newMessage', messageData);
       }
