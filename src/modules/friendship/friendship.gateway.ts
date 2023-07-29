@@ -53,23 +53,23 @@ export class FriendsGateway
     },
   ) {
     console.log('emit sendMessage');
-    const { userId, friendId, message, image } = payload;
-    const friendSocket = this.connectedUsers.get(friendId);
+    // const { userId, friendId, message, image } = payload;
+    // const friendSocket = this.connectedUsers.get(friendId);
 
-    console.log(client.id);
+    // console.log(client.id);
 
-    if (client) {
-      const newMessage = await this.friendService.saveMessage(
-        userId,
-        friendId,
-        message,
-        image,
-      );
-      client.emit('newMessage', newMessage);
-      if (friendSocket) {
-        friendSocket.emit('newMessage', newMessage);
-      }
-    }
+    // if (client) {
+    //   const newMessage = await this.friendService.saveMessage(
+    //     userId,
+    //     friendId,
+    //     message,
+    //     image,
+    //   );
+    //   client.emit('newMessage', newMessage);
+    //   if (friendSocket) {
+    //     friendSocket.emit('newMessage', newMessage);
+    //   }
+    // }
   }
 
   private async sendChatHistory(client: Socket, userId: number) {
