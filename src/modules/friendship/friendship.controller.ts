@@ -54,6 +54,6 @@ export class FriendshipController {
     @Query('userId') userId: number,
     @Query('friendId') friendId: number,
   ) {
-    return this.friendshipService.getChatHistory(userId, friendId);
+    return this.friendshipService.getChatHistoryNew(userId, friendId);
   }
 }
