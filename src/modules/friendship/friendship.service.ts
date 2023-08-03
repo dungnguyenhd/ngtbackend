@@ -176,7 +176,7 @@ export class FriendshipService {
 
     const raw_query =
       Prisma.raw(`SELECT fs.id as id, fs.user_id as user_id, fs.friend_id as friend_id, u.user_name as friend_name, u.full_name as friend_fullName, u.avatar as friend_avatar, fs.isAccept as isAccept, fs.created_at as created_at
-    FROM railway.friendship fs INNER JOIN railway.user u ON fs.friend_id = u.id WHERE ${query} fs.friend_id = ${userId} AND fs.isAccept = 0`);
+    FROM railway.friendship fs INNER JOIN railway.user u ON fs.user_id = u.id WHERE ${query} fs.friend_id = ${userId} AND fs.isAccept = 0`);
 
     const friends = await this.prismaService.$queryRaw<Friend[]>(raw_query);
 
