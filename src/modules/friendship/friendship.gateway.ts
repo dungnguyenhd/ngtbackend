@@ -21,7 +21,7 @@ export class FriendsGateway
     const userId = client.handshake.query.userId as string;
     this.connectedUsers.set(Number(userId), client);
     await this.sendOnlineUsers(Number(userId), client);
-    await this.sendChatHistory(client, Number(userId));
+    // await this.sendChatHistory(client, Number(userId));
   }
 
   async handleDisconnect(client: Socket) {
@@ -52,11 +52,8 @@ export class FriendsGateway
       image: string;
     },
   ) {
-    console.log('emit sendMessage');
     const { userId, friendId, message, image } = payload;
     const friendSocket = this.connectedUsers.get(friendId);
-
-    console.log(client.id);
 
     if (client) {
       const newMessage = await this.friendService.saveMessage(
@@ -72,12 +69,12 @@ export class FriendsGateway
     }
   }
 
-  private async sendChatHistory(client: Socket, userId: number) {
-    const chatHistory = await this.friendService.getChatHistory(userId);
-    if (client) {
-      client.emit('chatHistory', chatHistory);
-    }
-  }
+  // private async sendChatHistory(client: Socket, userId: number) {
+  //   const chatHistory = await this.friendService.getChatHistory(userId);
+  //   if (client) {
+  //     client.emit('chatHistory', chatHistory);
+  //   }
+  // }
 
   getClientByUserId(userId: number): Socket {
     return this.connectedUsers.get(userId);

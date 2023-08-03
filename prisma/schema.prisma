@@ -54,6 +54,7 @@ model Messenger {
   friend_id       Int
   message         String?  @db.LongText
   image           String?
+  isRead          Boolean @default(false)
   created_at      DateTime @default(now())
 
   @@map("messenger")

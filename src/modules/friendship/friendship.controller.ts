@@ -48,4 +48,12 @@ export class FriendshipController {
     );
     return { friendList };
   }
+
+  @Get('chat-histories')
+  async getChatHistory(
+    @Query('userId') userId: number,
+    @Query('friendId') friendId: number,
+  ) {
+    return this.friendshipService.getChatHistory(userId, friendId);
+  }
 }

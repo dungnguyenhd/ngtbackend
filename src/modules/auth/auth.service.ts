@@ -127,7 +127,7 @@ export class AuthService {
 
     const content = `<div class="container" align="center">
     <div
-      style="width: 100%;max-width: 595px;min-width: 327px;border: solid #582afa 2px;border-radius: 24px;overflow: hidden;">
+      style="width: 100%;max-width: 595px;min-width: 327px;border: solid #000000 2px;border-radius: 24px;overflow: hidden;">
       <div
         style="height:180px;background-color:#febd00;background-position: center;background-repeat: no-repeat;background-size: cover;background-image: url('https://media.istockphoto.com/id/1341408852/video/colored-smoke-on-a-dark-background-blue-and-red-light-with-smoke.jpg?s=640x640&k=20&c=v2DQUY8IVbli_6FH_9KAs6YWRXlDdYiBJHfp7JFh7NY=')">
         <a href="https://ngtstudio.netlify.app/"
@@ -138,18 +138,18 @@ export class AuthService {
             NGT STUDIO</div>
         </a>
       </div>
-      <div align="left" class="content" style="background-color: #fefefe;font-family: 'SVN-Cera';padding: 32px 16px 48px;">
+      <div align="left" class="content" style="background-color: ##000000;font-family: 'SVN-Cera';padding: 32px 16px 48px;">
         <div>
-          <div style=" font-style: normal;font-size: 18px;line-height: 26px;color: #4b5563;">
+          <div style=" font-style: normal;font-size: 18px;line-height: 26px;color: #e8e8e8;">
             ${hiText}
           </div><br>
           <div class="fw-medium" style="font-style: normal;font-weight: 500;font-size: 18px;line-height: 26px;">
-            <span style="color: #0f213d">
+            <span style="color: #e8e8e8">
               ${mailText01}</span>
           </div>
         </div>
         <br>
-        <div class="fs-lg" style="color: #4B5563;font-size: 16px;line-height: 24px;">
+        <div class="fs-lg" style="color: #e8e8e8;font-size: 16px;line-height: 24px;">
           <div>
             ${mailText02}
           </div><br>
@@ -160,7 +160,7 @@ export class AuthService {
         <div style="text-align: center;margin-top: 40px;">
           <a href="https://ngtbackend-production.up.railway.app/auth/confirm-email?jwt=${jwt}"
             style="display: inline-block;cursor: pointer;text-decoration: unset;padding: 12px 24px;background: #4834f1;border-radius: 100px;">
-            <span style="font-weight: 500;font-size: 16px;line-height: 24px;letter-spacing: 0.02em;color: #F3F4F6;">
+            <span style="font-weight: 500;font-size: 16px;line-height: 24px;letter-spacing: 0.02em;color: #1f1f1f;">
               ${mailText04}
             </span>
           </a>
