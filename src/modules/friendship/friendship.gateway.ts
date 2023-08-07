@@ -7,11 +7,14 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { FriendshipService } from './friendship.service';
+import Semaphore from 'semaphore-async-await';
 
 @WebSocketGateway({ cors: true })
 export class FriendsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
+  private semaphore = new Semaphore(1);
+
   @WebSocketServer() server: Server;
   private connectedUsers = new Map<number, Socket>();
 
@@ -57,24 +60,35 @@ export class FriendsGateway
     if (client) {
       const friendSocket = this.connectedUsers.get(friendId);
       const sentAt = new Date();
-      const isDuplicate = await this.isDuplicateMessage(
-        userId,
-        friendId,
-        message,
-        sentAt,
-      );
-      if (!isDuplicate) {
-        const newMessage = await this.friendService.saveMessage(
+      try {
+        // Acquire the semaphore before performing any critical operations
+        await this.semaphore.acquire();
+
+        const isDuplicate = await this.isDuplicateMessage(
           userId,
           friendId,
           message,
-          image,
           sentAt,
         );
-        client.emit('newMessage', newMessage);
-        if (friendSocket) {
-          friendSocket.emit('newMessage', newMessage);
+
+        if (!isDuplicate) {
+          const newMessage = await this.friendService.saveMessage(
+            userId,
+            friendId,
+            message,
+            image,
+            sentAt,
+          );
+          client.emit('newMessage', newMessage);
+          if (friendSocket) {
+            friendSocket.emit('newMessage', newMessage);
+          }
         }
+      } catch (error) {
+        console.error('Error processing message:', error);
+      } finally {
+        // Release the semaphore after the critical operations are done
+        this.semaphore.release();
       }
     }
   }
