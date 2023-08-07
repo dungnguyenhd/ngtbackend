@@ -54,7 +54,7 @@ export class FriendsGateway
     },
   ) {
     const { userId, friendId, message, image } = payload;
-    // const friendSocket = this.connectedUsers.get(friendId);
+    const friendSocket = this.connectedUsers.get(friendId);
 
     if (client) {
       const newMessage = await this.friendService.saveMessage(
@@ -64,9 +64,9 @@ export class FriendsGateway
         image,
       );
       client.emit('newMessage', newMessage);
-      // if (friendSocket) {
-      //   friendSocket.emit('newMessage', newMessage);
-      // }
+      if (friendSocket) {
+        friendSocket.emit('newMessage', newMessage);
+      }
     }
   }
 

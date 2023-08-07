@@ -118,20 +118,26 @@ export class FriendshipService {
     const formattedFriendList = await Promise.all(
       friendList.map(async (friendship) => {
         if (friendship.user_id === user.id) {
+          const currentInfo = await this.prismaService.user.findUnique({
+            where: { id: friendship.friend_id },
+          });
           return {
             friendshipId: friendship.id,
             friendId: friendship.friend_id,
-            friendName: friendship.friend_name,
-            friendAvatar: friendship.friend_avatar,
-            friendFullname: friendship.friend_fullName,
+            friendName: currentInfo.user_name,
+            friendAvatar: currentInfo.avatar,
+            friendFullname: currentInfo.full_name,
           };
         } else {
+          const currentInfo = await this.prismaService.user.findUnique({
+            where: { id: friendship.user_id },
+          });
           return {
             friendshipId: friendship.id,
             friendId: friendship.user_id,
-            friendName: friendship.user_name,
-            friendAvatar: friendship.user_avatar,
-            friendFullname: friendship.user_fullName,
+            friendName: currentInfo.user_name,
+            friendAvatar: currentInfo.avatar,
+            friendFullname: currentInfo.full_name,
           };
         }
       }),
