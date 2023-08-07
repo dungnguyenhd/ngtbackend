@@ -6,11 +6,10 @@ import { ChatModule } from './modules/chat/chat.module';
 import { FriendshipModule } from './modules/friendship/friendship.module';
 import { FriendshipService } from './modules/friendship/friendship.service';
 import { PrismaService } from './modules/common/prisma/prisma.service';
-import { FriendsGateway } from './modules/friendship/friendship.gateway';
 
 @Module({
   imports: [AuthModule, ChatModule, FriendshipModule],
   controllers: [AppController],
-  providers: [AppService, FriendsGateway, FriendshipService, PrismaService],
+  providers: [AppService, FriendshipService, PrismaService],
 })
 export class AppModule {}
