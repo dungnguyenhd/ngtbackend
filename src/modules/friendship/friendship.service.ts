@@ -230,12 +230,26 @@ export class FriendshipService {
     });
   }
 
-  async getChatHistory(userId: number) {
-    return this.prismaService.messenger.findMany({
-      where: {
-        OR: [{ user_id: userId }, { friend_id: userId }],
-      },
-      orderBy: { created_at: 'asc' },
-    });
+  async markAsRead(ids: number[]) {
+    try {
+      await this.prismaService.messenger.updateMany({
+        where: { id: { in: ids } },
+        data: {
+          isRead: true,
+        },
+      });
+      return 'ok';
+    } catch (err) {
+      throw new ForbiddenException(err);
+    }
   }
+
+  // async getChatHistory(userId: number) {
+  //   return this.prismaService.messenger.findMany({
+  //     where: {
+  //       OR: [{ user_id: userId }, { friend_id: userId }],
+  //     },
+  //     orderBy: { created_at: 'asc' },
+  //   });
+  // }
 }

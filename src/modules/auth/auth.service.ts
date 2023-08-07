@@ -140,16 +140,16 @@ export class AuthService {
       </div>
       <div align="left" class="content" style="background-color: ##000000;font-family: 'SVN-Cera';padding: 32px 16px 48px;">
         <div>
-          <div style=" font-style: normal;font-size: 18px;line-height: 26px;color: #e8e8e8;">
+          <div style=" font-style: normal;font-size: 18px;line-height: 26px;color: black;">
             ${hiText}
           </div><br>
           <div class="fw-medium" style="font-style: normal;font-weight: 500;font-size: 18px;line-height: 26px;">
-            <span style="color: #e8e8e8">
+            <span style="color: black">
               ${mailText01}</span>
           </div>
         </div>
         <br>
-        <div class="fs-lg" style="color: #e8e8e8;font-size: 16px;line-height: 24px;">
+        <div class="fs-lg" style="color: black;font-size: 16px;line-height: 24px;">
           <div>
             ${mailText02}
           </div><br>

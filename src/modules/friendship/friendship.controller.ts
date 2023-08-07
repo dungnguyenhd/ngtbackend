@@ -56,4 +56,9 @@ export class FriendshipController {
   ) {
     return this.friendshipService.getChatHistoryNew(userId, friendId);
   }
+
+  @Patch('mark-as-read')
+  markAsRead(@Body() ids: number[]) {
+    return this.friendshipService.markAsRead(ids);
+  }
 }
