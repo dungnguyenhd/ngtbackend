@@ -21,14 +21,14 @@ export class FriendsGateway
     const userId = client.handshake.query.userId as string;
     console.log(`user id ${userId} is online`);
     this.connectedUsers.set(Number(userId), client);
-    await this.sendOnlineUsers(Number(userId), client);
+    // await this.sendOnlineUsers(Number(userId), client);
     await this.sendChatHistory(client, Number(userId));
   }
 
   async handleDisconnect(client: Socket) {
     const userId = client.handshake.query.userId as string;
     this.connectedUsers.delete(Number(userId));
-    await this.sendOnlineUsers(Number(userId), client);
+    // await this.sendOnlineUsers(Number(userId), client);
   }
 
   async sendOnlineUsers(userId: number, client: Socket) {
