@@ -53,18 +53,28 @@ export class FriendsGateway
     },
   ) {
     const { userId, friendId, message, image } = payload;
-    const friendSocket = this.connectedUsers.get(friendId);
 
     if (client) {
-      const newMessage = await this.friendService.saveMessage(
+      const friendSocket = this.connectedUsers.get(friendId);
+      const sentAt = new Date();
+      const isDuplicate = await this.isDuplicateMessage(
         userId,
         friendId,
         message,
-        image,
+        sentAt,
       );
-      client.emit('newMessage', newMessage);
-      if (friendSocket) {
-        friendSocket.emit('newMessage', newMessage);
+      if (!isDuplicate) {
+        const newMessage = await this.friendService.saveMessage(
+          userId,
+          friendId,
+          message,
+          image,
+          sentAt,
+        );
+        client.emit('newMessage', newMessage);
+        if (friendSocket) {
+          friendSocket.emit('newMessage', newMessage);
+        }
       }
     }
   }
@@ -78,5 +88,22 @@ export class FriendsGateway
 
   getClientByUserId(userId: number): Socket {
     return this.connectedUsers.get(userId);
+  }
+
+  async isDuplicateMessage(
+    userId: number,
+    friendId: number,
+    message: string,
+    sentAt: Date,
+  ): Promise<boolean> {
+    // Thực hiện truy vấn để kiểm tra sự tồn tại của tin nhắn trong khoảng thời gian cho phép
+    const existingMessage =
+      await this.friendService.findMessageByContentAndTime(
+        userId,
+        friendId,
+        message,
+        sentAt,
+      );
+    return !!existingMessage; // Trả về true nếu tin nhắn đã tồn tại
   }
 }
