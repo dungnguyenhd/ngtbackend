@@ -218,18 +218,6 @@ export class FriendshipService {
     return saveMessage;
   }
 
-  async getChatHistoryNew(userId: number, friendId: number) {
-    return this.prismaService.messenger.findMany({
-      where: {
-        OR: [
-          { user_id: userId, friend_id: friendId },
-          { user_id: friendId, friend_id: userId },
-        ],
-      },
-      orderBy: { created_at: 'asc' },
-    });
-  }
-
   async markAsRead(ids: number[]) {
     try {
       await this.prismaService.messenger.updateMany({
@@ -244,12 +232,12 @@ export class FriendshipService {
     }
   }
 
-  // async getChatHistory(userId: number) {
-  //   return this.prismaService.messenger.findMany({
-  //     where: {
-  //       OR: [{ user_id: userId }, { friend_id: userId }],
-  //     },
-  //     orderBy: { created_at: 'asc' },
-  //   });
-  // }
+  async getChatHistory(userId: number) {
+    return this.prismaService.messenger.findMany({
+      where: {
+        OR: [{ user_id: userId }, { friend_id: userId }],
+      },
+      orderBy: { created_at: 'asc' },
+    });
+  }
 }
