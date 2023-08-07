@@ -199,7 +199,6 @@ export class FriendshipService {
     friendId: number,
     message: string,
     image: string,
-    sentAt: Date,
   ): Promise<Messenger> {
     const saveMessage = await this.prismaService.messenger.create({
       data: {
@@ -208,33 +207,9 @@ export class FriendshipService {
         message: message,
         image: image,
         isRead: false,
-        created_at: sentAt, // Lưu thời gian gửi tin nhắn
       },
     });
     return saveMessage;
-  }
-
-  async findMessageByContentAndTime(
-    userId: number,
-    friendId: number,
-    message: string,
-    sentAt: Date,
-  ): Promise<Messenger | null> {
-    const messageFound = await this.prismaService.messenger.findFirst({
-      where: {
-        user_id: userId,
-        friend_id: friendId,
-        message: message,
-        created_at: {
-          gte: new Date(sentAt.getTime() - 50), // 50ms trước thời gian gửi
-          lte: new Date(sentAt.getTime() + 50), // 50ms sau thời gian gửi
-        },
-      },
-      orderBy: {
-        created_at: 'desc', // Sắp xếp theo thời gian giảm dần để lấy tin nhắn gần nhất
-      },
-    });
-    return messageFound;
   }
 
   async getChatHistoryNew(userId: number, friendId: number) {

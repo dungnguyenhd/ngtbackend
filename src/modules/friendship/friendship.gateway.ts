@@ -7,14 +7,11 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { FriendshipService } from './friendship.service';
-import Semaphore from 'semaphore-async-await';
 
 @WebSocketGateway({ cors: true })
 export class FriendsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  private semaphore = new Semaphore(1);
-
   @WebSocketServer() server: Server;
   private connectedUsers = new Map<number, Socket>();
 
@@ -56,39 +53,18 @@ export class FriendsGateway
     },
   ) {
     const { userId, friendId, message, image } = payload;
+    const friendSocket = this.connectedUsers.get(friendId);
 
     if (client) {
-      const friendSocket = this.connectedUsers.get(friendId);
-      const sentAt = new Date();
-      try {
-        // Acquire the semaphore before performing any critical operations
-        await this.semaphore.acquire();
-
-        const isDuplicate = await this.isDuplicateMessage(
-          userId,
-          friendId,
-          message,
-          sentAt,
-        );
-
-        if (!isDuplicate) {
-          const newMessage = await this.friendService.saveMessage(
-            userId,
-            friendId,
-            message,
-            image,
-            sentAt,
-          );
-          client.emit('newMessage', newMessage);
-          if (friendSocket) {
-            friendSocket.emit('newMessage', newMessage);
-          }
-        }
-      } catch (error) {
-        console.error('Error processing message:', error);
-      } finally {
-        // Release the semaphore after the critical operations are done
-        this.semaphore.release();
+      const newMessage = await this.friendService.saveMessage(
+        userId,
+        friendId,
+        message,
+        image,
+      );
+      client.emit('newMessage', newMessage);
+      if (friendSocket) {
+        friendSocket.emit('newMessage', newMessage);
       }
     }
   }
@@ -102,22 +78,5 @@ export class FriendsGateway
 
   getClientByUserId(userId: number): Socket {
     return this.connectedUsers.get(userId);
-  }
-
-  async isDuplicateMessage(
-    userId: number,
-    friendId: number,
-    message: string,
-    sentAt: Date,
-  ): Promise<boolean> {
-    // Thực hiện truy vấn để kiểm tra sự tồn tại của tin nhắn trong khoảng thời gian cho phép
-    const existingMessage =
-      await this.friendService.findMessageByContentAndTime(
-        userId,
-        friendId,
-        message,
-        sentAt,
-      );
-    return !!existingMessage; // Trả về true nếu tin nhắn đã tồn tại
   }
 }
