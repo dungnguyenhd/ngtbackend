@@ -89,7 +89,6 @@ export class FriendsGateway
         message,
         image,
       );
-      client.emit('newMessageServer', newMessage);
       this.server.emit('newMessageServer', newMessage);
     }
   }
