@@ -55,8 +55,8 @@ export class FriendshipController {
   }
 
   @Get('server-chat-histories')
-  async getServerChatHistory(@Query('serverId') serverId: number) {
-    return this.friendshipService.getServerChatHistory(serverId);
+  async getServerChatHistory(@Query('serverId') serverId: string) {
+    return this.friendshipService.getServerChatHistory(Number(serverId));
   }
 
   @Get('server-list')

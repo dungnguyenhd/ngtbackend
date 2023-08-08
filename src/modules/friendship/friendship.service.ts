@@ -236,7 +236,12 @@ export class FriendshipService {
       where: { id: userId },
     });
     return {
-      ...saveMessage,
+      id: saveMessage.id,
+      server_id: saveMessage.server_id,
+      user_id: saveMessage.user_id,
+      message: saveMessage.message,
+      image: saveMessage.image,
+      createdAt: saveMessage.created_at,
       user_name: user.user_name,
       user_fullName: user.full_name,
       user_avatar: user.avatar,
