@@ -6,7 +6,7 @@ import {
   FRIEND_REQUEST_ALREADY_SENT,
 } from '../common/constants/error.constant';
 import { Friend, ResponseFriendRequestDto } from './dto/friendship.dto';
-import { Messenger, Prisma } from '@prisma/client';
+import { Messenger, Prisma, Server, ServerMessenger } from '@prisma/client';
 
 @Injectable()
 export class FriendshipService {
@@ -218,6 +218,23 @@ export class FriendshipService {
     return saveMessage;
   }
 
+  async saveMessageServer(
+    userId: number,
+    serverId: number,
+    message: string,
+    image: string,
+  ): Promise<ServerMessenger> {
+    const saveMessage = await this.prismaService.serverMessenger.create({
+      data: {
+        user_id: userId,
+        server_id: serverId,
+        message: message,
+        image: image,
+      },
+    });
+    return saveMessage;
+  }
+
   async markAsRead(ids: number[]) {
     try {
       await this.prismaService.messenger.updateMany({
@@ -239,5 +256,16 @@ export class FriendshipService {
       },
       orderBy: { created_at: 'asc' },
     });
+  }
+
+  async getServerChatHistory(serverId: number) {
+    return this.prismaService.serverMessenger.findMany({
+      where: { server_id: serverId },
+      orderBy: { created_at: 'asc' },
+    });
+  }
+
+  async getServerList() {
+    return this.prismaService.server.findMany();
   }
 }

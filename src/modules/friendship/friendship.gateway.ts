@@ -70,6 +70,30 @@ export class FriendsGateway
     }
   }
 
+  @SubscribeMessage('sendMessageServer')
+  async handleSendMessageServer(
+    client: Socket,
+    payload: {
+      userId: number;
+      serverId: number;
+      message: string;
+      image: string;
+    },
+  ) {
+    const { userId, serverId, message, image } = payload;
+
+    if (client) {
+      const newMessage = await this.friendService.saveMessageServer(
+        userId,
+        serverId,
+        message,
+        image,
+      );
+      client.emit('newMessageServer', newMessage);
+      this.server.emit('newMessageServer', newMessage);
+    }
+  }
+
   // private async sendChatHistory(client: Socket, userId: number) {
   //   const chatHistory = await this.friendService.getChatHistory(userId);
   //   if (client) {

@@ -54,6 +54,16 @@ export class FriendshipController {
     return this.friendshipService.getChatHistory(user.id);
   }
 
+  @Get('server-chat-histories')
+  async getServerChatHistory(@Query('serverId') serverId: number) {
+    return this.friendshipService.getServerChatHistory(serverId);
+  }
+
+  @Get('server-list')
+  async getServerList() {
+    return this.friendshipService.getServerList();
+  }
+
   @Patch('mark-as-read')
   markAsRead(@Body() ids: number[]) {
     return this.friendshipService.markAsRead(ids);

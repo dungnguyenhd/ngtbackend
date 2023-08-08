@@ -38,10 +38,10 @@ model Friendship {
   user_name       String?
   friend_id       Int
   friend_name     String?
-  user_fullName String?
-  user_avatar    String?
+  user_fullName   String?
+  user_avatar     String?
   friend_fullName String?
-  friend_avatar    String?
+  friend_avatar   String?
   isAccept        Boolean
   created_at      DateTime @default(now())
 
@@ -49,13 +49,35 @@ model Friendship {
 }
 
 model Messenger {
-  id              Int      @id @default(autoincrement())
-  user_id         Int
-  friend_id       Int
-  message         String?  @db.LongText
-  image           String?
-  isRead          Boolean @default(false)
-  created_at      DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  friend_id  Int
+  message    String?  @db.LongText
+  image      String?
+  isRead     Boolean  @default(false)
+  created_at DateTime @default(now())
 
   @@map("messenger")
+}
+
+model ServerMessenger {
+  id         Int      @id @default(autoincrement())
+  server     Server   @relation(fields: [server_id], references: [id])
+  server_id  Int
+  user_id    Int
+  message    String?  @db.LongText
+  image      String?
+  created_at DateTime @default(now())
+
+  @@map("server_messenger")
+}
+
+model Server {
+  id               Int               @id @default(autoincrement())
+  server_name      Int
+  server_avatar    String?           @db.LongText
+  server_messenger ServerMessenger[]
+  created_at       DateTime          @default(now())
+
+  @@map("server")
 }
