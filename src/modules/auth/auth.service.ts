@@ -46,6 +46,8 @@ export class AuthService {
       password: hashedPassword,
       email: params.userName,
       full_name: params.fullName,
+      avatar:
+        'https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png',
       status: 'UNCONFIRM',
       level: 'USER',
       type: 'ACCOUNT',
@@ -271,6 +273,7 @@ export class AuthService {
           user_name: req.user.email,
           password: null,
           email: req.user.email,
+          avatar: req.user.picture,
           full_name: null,
           status: 'ACTIVE',
           level: 'USER',
