@@ -223,7 +223,7 @@ export class FriendshipService {
     serverId: number,
     message: string,
     image: string,
-  ): Promise<ServerMessenger> {
+  ) {
     const saveMessage = await this.prismaService.serverMessenger.create({
       data: {
         user_id: userId,
@@ -232,7 +232,15 @@ export class FriendshipService {
         image: image,
       },
     });
-    return saveMessage;
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
+    return {
+      saveMessage,
+      user_name: user.user_name,
+      user_fullName: user.full_name,
+      user_avatar: user.avatar,
+    };
   }
 
   async markAsRead(ids: number[]) {
@@ -259,10 +267,29 @@ export class FriendshipService {
   }
 
   async getServerChatHistory(serverId: number) {
-    return this.prismaService.serverMessenger.findMany({
+    const serverMessage = await this.prismaService.serverMessenger.findMany({
       where: { server_id: serverId },
       orderBy: { created_at: 'asc' },
     });
+    const serverChatHistory = serverMessage.map(async (message) => {
+      const user = await this.prismaService.user.findUnique({
+        where: { id: message.user_id },
+      });
+
+      return {
+        id: message.id,
+        server_id: message.server_id,
+        user_id: message.user_id,
+        user_name: user.user_name,
+        user_fullName: user.full_name,
+        user_avatar: user.avatar,
+        message: message.message,
+        image: message.image,
+        createdAt: message.created_at,
+      };
+    });
+
+    return serverChatHistory;
   }
 
   async getServerList() {
