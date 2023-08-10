@@ -50,8 +50,8 @@ export class FriendshipController {
   }
 
   @Get('chat-histories')
-  async getChatHistory(@User() user, @Query('take') take: string) {
-    return this.friendshipService.getChatHistory(user.id, Number(take));
+  async getChatHistory(@User() user) {
+    return this.friendshipService.getChatHistory(user.id);
   }
 
   @Get('server-chat-histories')

@@ -262,13 +262,12 @@ export class FriendshipService {
     }
   }
 
-  async getChatHistory(userId: number, take: number) {
+  async getChatHistory(userId: number) {
     return this.prismaService.messenger.findMany({
       where: {
         OR: [{ user_id: userId }, { friend_id: userId }],
       },
       orderBy: { created_at: 'asc' },
-      take: take || 20,
     });
   }
 
