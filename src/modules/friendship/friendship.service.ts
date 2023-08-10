@@ -268,7 +268,7 @@ export class FriendshipService {
         OR: [{ user_id: userId }, { friend_id: userId }],
       },
       orderBy: { created_at: 'asc' },
-      take: take,
+      take: take || 20,
     });
   }
 
@@ -276,7 +276,7 @@ export class FriendshipService {
     const serverMessage = await this.prismaService.serverMessenger.findMany({
       where: { server_id: serverId },
       orderBy: { created_at: 'asc' },
-      take: take,
+      take: take || 20,
     });
     const serverChatHistory = await Promise.all(
       serverMessage.map(async (message) => {
