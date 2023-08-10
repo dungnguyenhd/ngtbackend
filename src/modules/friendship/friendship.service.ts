@@ -274,7 +274,7 @@ export class FriendshipService {
   async getServerChatHistory(serverId: number, take: number) {
     const serverMessage = await this.prismaService.serverMessenger.findMany({
       where: { server_id: serverId },
-      orderBy: { created_at: 'asc' },
+      orderBy: { created_at: 'desc' },
       take: take || 20,
     });
     const serverChatHistory = await Promise.all(
@@ -297,7 +297,9 @@ export class FriendshipService {
       }),
     );
 
-    return serverChatHistory;
+    const reversedChatHistory = serverChatHistory.reverse();
+
+    return reversedChatHistory;
   }
 
   async getServerList() {
