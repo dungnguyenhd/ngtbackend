@@ -262,19 +262,21 @@ export class FriendshipService {
     }
   }
 
-  async getChatHistory(userId: number) {
+  async getChatHistory(userId: number, take: number) {
     return this.prismaService.messenger.findMany({
       where: {
         OR: [{ user_id: userId }, { friend_id: userId }],
       },
       orderBy: { created_at: 'asc' },
+      take: take,
     });
   }
 
-  async getServerChatHistory(serverId: number) {
+  async getServerChatHistory(serverId: number, take: number) {
     const serverMessage = await this.prismaService.serverMessenger.findMany({
       where: { server_id: serverId },
       orderBy: { created_at: 'asc' },
+      take: take,
     });
     const serverChatHistory = await Promise.all(
       serverMessage.map(async (message) => {
