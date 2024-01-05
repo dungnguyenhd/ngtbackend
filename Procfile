@@ -1,1 +1,1 @@
-npm run start:prod
+yarn run start:prod

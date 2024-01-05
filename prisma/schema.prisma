@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:d5A-2geCA34g54e54-bG6HdfBDeBhfEB@monorail.proxy.rlwy.net:47931/railway"
+  url      = "mysql://ngt_admin:Zxczxc123@ngtdb.cn8ksuou2ktn.ap-southeast-1.rds.amazonaws.com:3306/ngtdb"
 }
 
 generator client {
