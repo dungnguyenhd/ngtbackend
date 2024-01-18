@@ -50,6 +50,7 @@
     "semaphore-async-await": "^1.5.1"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.0",
     "@nestjs/cli": "^10.1.0",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.1.0",
