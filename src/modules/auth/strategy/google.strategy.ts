@@ -8,10 +8,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor() {
     super({
       clientID:
-        '919992439024-dr9mcnlgc7b2bde1j536s91t5cb466sb.apps.googleusercontent.com',
-      clientSecret: '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',
+        '919992439024-d8val5ah4pm6o9b245vvj5pk5qf5sc26.apps.googleusercontent.com',
+      clientSecret: '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',
       callbackURL:
-        'https://ngtbackend-production.up.railway.app/auth/google/redirect',
+        'https://ngtbackend-v1.fly.dev/auth/google/redirect',
       scope: ['email', 'profile'],
     });
   }

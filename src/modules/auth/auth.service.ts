@@ -160,7 +160,7 @@ export class AuthService {
           </div>
         </div>
         <div style="text-align: center;margin-top: 40px;">
-          <a href="https://ngtbackend-production.up.railway.app/auth/confirm-email?jwt=${jwt}"
+          <a href="https://ngtbackend-v1.fly.dev/auth/confirm-email?jwt=${jwt}"
             style="display: inline-block;cursor: pointer;text-decoration: unset;padding: 12px 24px;background: #4834f1;border-radius: 100px;">
             <span style="font-weight: 500;font-size: 16px;line-height: 24px;letter-spacing: 0.02em;color: #1f1f1f;">
               ${mailText04}
