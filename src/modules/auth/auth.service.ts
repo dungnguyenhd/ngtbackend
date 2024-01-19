@@ -48,7 +48,7 @@ export class AuthService {
       full_name: params.fullName,
       avatar:
         'https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png',
-      status: 'UNCONFIRM',
+      status: 'ACTIVE',
       level: 'USER',
       type: 'ACCOUNT',
       has_password: true,
@@ -61,11 +61,11 @@ export class AuthService {
         })
       : await this.prismaService.user.create({ data: userData });
 
-    const { accessToken } = this.generateToken(user.id, user.user_name, null);
-    this.sendMail(user.email, accessToken);
+    // const { accessToken } = this.generateToken(user.id, user.user_name, null);
+    // this.sendMail(user.email, accessToken);
     return {
       code: 200,
-      status: 'please check your email to activate your account',
+      status: 'ok',
     };
   }
 
