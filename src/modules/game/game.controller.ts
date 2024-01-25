@@ -2,7 +2,7 @@ import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { GameService } from './game.service';
 import { Auth } from '../common/decorators/auth.decorator';
 import { User } from '../common/decorators/user.decorator';
-import { PlayerHistoryResponse, CreatePlayerHistoryDto, OnSuccessResponseDto, PLayerDashboardResponse } from './Game.dto';
+import { PlayerHistoryResponse, CreatePlayerHistoryDto, OnSuccessResponseDto, PLayerDashboardResponse } from './game.dto';
 
 @Controller('game')
 @Auth()

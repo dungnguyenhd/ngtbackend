@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
-import { OnSuccessResponseDto, PLayerDashboardResponse, PlayerHistoryResponse } from './Game.dto';
+import { OnSuccessResponseDto, PLayerDashboardResponse, PlayerHistoryResponse } from './game.dto';
 
 @Injectable()
 export class GameService {
@@ -19,18 +19,38 @@ export class GameService {
   async createPlayerHistory(userId: number, gameId: number, score: number): Promise<OnSuccessResponseDto> {
 
     try {
-      await this.prismaService.userPlayHistory.create({
+      this.prismaService.userPlayHistory.create({
         data: {
           user_id: userId,
           game_id: gameId,
           score: score,
         },
       });
+
+      const playerDashboard = await this.prismaService.userDashboard.findMany({
+        where: {
+          user_id: userId,
+          game_id: gameId,
+        }
+      });
+
+      if (!playerDashboard) {
+        this.prismaService.userDashboard.create({
+          data: {
+            user_id: userId,
+            game_id: gameId,
+            score: score,
+            game_played: 1,
+          }
+        })
+      }
+
+      return { code: 200, status: "OK" };
     } catch (err) {
       throw new ForbiddenException(err);
     }
 
-    return { code: 200, status: "OK" };
+
   }
 
   async getPlayerDashboard(userId: number): Promise<PLayerDashboardResponse[]> {
