@@ -11,23 +11,25 @@ generator client {
 }
 
 model User {
-  id                   Int       @id @default(autoincrement())
-  user_name            String    @unique
+  id                   Int               @id @default(autoincrement())
+  user_name            String            @unique
   password             String?
   full_name            String?
   avatar               String?
   type                 String?
-  email                String?   @unique
+  email                String?           @unique
   user_id_social       String?
   status               String?
   active               String?
   level                String?
-  created_at           DateTime  @default(now())
-  updated_at           DateTime  @updatedAt
+  created_at           DateTime          @default(now())
+  updated_at           DateTime          @updatedAt
   last_login           DateTime?
   last_logout          DateTime?
   current_used_product Int?
-  has_password         Boolean   @default(true)
+  has_password         Boolean           @default(true)
+  UserDashboard        UserDashboard[]
+  UserPlayHistory      UserPlayHistory[]
 
   @@map("user")
 }
@@ -80,4 +82,40 @@ model Server {
   created_at       DateTime          @default(now())
 
   @@map("server")
+}
+
+model UserPlayHistory {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  game       Game     @relation(fields: [game_id], references: [id])
+  game_id    Int
+  score      Int
+  created_at DateTime @default(now())
+
+  @@map("user_play_history")
+}
+
+model UserDashboard {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     Int
+  game        Game     @relation(fields: [game_id], references: [id])
+  game_id     Int
+  score       Int
+  game_played Int
+  updated_at  DateTime @updatedAt
+  created_at  DateTime @default(now())
+
+  @@map("user_dashboard")
+}
+
+model Game {
+  id              Int               @id @default(autoincrement())
+  game_name       String
+  created_at      DateTime          @default(now())
+  UserDashboard   UserDashboard[]
+  UserPlayHistory UserPlayHistory[]
+
+  @@map("game")
 }
