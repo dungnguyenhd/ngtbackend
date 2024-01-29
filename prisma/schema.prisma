@@ -100,9 +100,10 @@ model UserDashboard {
   id          Int      @id @default(autoincrement())
   user        User     @relation(fields: [user_id], references: [id])
   user_id     Int
+  user_name   String   @default("Test01")
   game        Game     @relation(fields: [game_id], references: [id])
   game_id     Int
-  score       Int
+  score       Float
   game_played Int
   updated_at  DateTime @updatedAt
   created_at  DateTime @default(now())

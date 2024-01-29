@@ -17,8 +17,6 @@ export class PlayerHistoryResponse {
 }
 
 export class CreatePlayerHistoryDto {
-    user_id: number;
-
     game_id: number;
 
     score: number;
@@ -30,5 +28,9 @@ export class PLayerDashboardResponse {
     user_id: number;
 
     game_id: number;
+
+    user_name: string;
+
+    score: number;
 }
 

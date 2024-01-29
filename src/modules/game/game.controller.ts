@@ -22,8 +22,9 @@ export class GameController {
   @Post('player-history')
   async createPlayerHistory(
     @Body() params: CreatePlayerHistoryDto,
+    @User() user,
   ): Promise<OnSuccessResponseDto> {
-    return this.gameService.createPlayerHistory(params.user_id, params.game_id, params.score);
+    return this.gameService.createPlayerHistory(user.id, params.game_id, params.score);
   }
 
   @Get('player-dashboard')

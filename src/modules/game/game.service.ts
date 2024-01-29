@@ -17,9 +17,8 @@ export class GameService {
   }
 
   async createPlayerHistory(userId: number, gameId: number, score: number): Promise<OnSuccessResponseDto> {
-
     try {
-      this.prismaService.userPlayHistory.create({
+      const userHistory = await this.prismaService.userPlayHistory.create({
         data: {
           user_id: userId,
           game_id: gameId,
@@ -34,8 +33,8 @@ export class GameService {
         }
       });
 
-      if (!playerDashboard) {
-        this.prismaService.userDashboard.create({
+      if (playerDashboard.length == 0) {
+        const dashboard = await this.prismaService.userDashboard.create({
           data: {
             user_id: userId,
             game_id: gameId,
@@ -43,14 +42,14 @@ export class GameService {
             game_played: 1,
           }
         })
+      } else {
+        this.updatePlayerDashboard(userId, gameId, score);
       }
 
       return { code: 200, status: "OK" };
     } catch (err) {
       throw new ForbiddenException(err);
     }
-
-
   }
 
   async getPlayerDashboard(userId: number): Promise<PLayerDashboardResponse[]> {
@@ -92,7 +91,7 @@ export class GameService {
       const gamePlayed = playerDashboard.game_played + 1;
       const updatedScore = (playerDashboard.score * playerDashboard.game_played + score) / gamePlayed;
 
-      this.prismaService.userDashboard.update({
+      await this.prismaService.userDashboard.update({
         where: {
           id: playerDashboard.id,
         },
@@ -123,4 +122,6 @@ export class GameService {
       throw new ForbiddenException(err);
     }
   }
+
+  
 }
